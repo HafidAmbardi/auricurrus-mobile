@@ -1,4 +1,4 @@
-# Auricurrus-Features
+# Auricurrus-Frontend
 
 An IoT based solution to support the deaf in driving. Team HackAttack's idea for the Google Solutions Challenge 2024.
 

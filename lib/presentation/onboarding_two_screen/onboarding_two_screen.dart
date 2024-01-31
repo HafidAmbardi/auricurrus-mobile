@@ -3,6 +3,7 @@ import 'package:hafidomio_s_application2/core/app_export.dart';
 import 'package:hafidomio_s_application2/widgets/app_bar/appbar_subtitle_two.dart';
 import 'package:hafidomio_s_application2/widgets/app_bar/custom_app_bar.dart';
 import 'package:hafidomio_s_application2/widgets/custom_elevated_button.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class OnboardingTwoScreen extends StatelessWidget {
   const OnboardingTwoScreen({Key? key}) : super(key: key);
@@ -16,10 +17,8 @@ class OnboardingTwoScreen extends StatelessWidget {
                 width: double.maxFinite,
                 padding: EdgeInsets.symmetric(horizontal: 25.h, vertical: 42.v),
                 child: Column(children: [
-                  CustomImageView(
-                      imagePath: ImageConstant.imgUndrawByTheRoadReVvs7,
-                      height: 225.v,
-                      width: 278.h),
+                  SvgPicture.asset(ImageConstant.imgUndrawByTheRoadReVvs7,
+                      height: 225.v, width: 278.h),
                   SizedBox(height: 74.v),
                   Text("Enhancing Road Safety",
                       style: theme.textTheme.headlineSmall),

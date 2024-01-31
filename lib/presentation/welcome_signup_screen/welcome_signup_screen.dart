@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hafidomio_s_application2/core/app_export.dart';
 import 'package:hafidomio_s_application2/widgets/custom_elevated_button.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class WelcomeSignupScreen extends StatelessWidget {
   const WelcomeSignupScreen({Key? key}) : super(key: key);
@@ -16,10 +17,8 @@ class WelcomeSignupScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SizedBox(height: 19.v),
-                      CustomImageView(
-                          imagePath: ImageConstant.imgUndrawWinnersReWr1l,
-                          height: 272.v,
-                          width: 270.h),
+                      SvgPicture.asset(ImageConstant.imgUndrawWinnersReWr1l,
+                          height: 272.v, width: 270.h),
                       SizedBox(height: 47.v),
                       Container(
                           width: 307.h,

@@ -5,6 +5,7 @@ import 'package:hafidomio_s_application2/widgets/app_bar/appbar_leading_iconbutt
 import 'package:hafidomio_s_application2/widgets/app_bar/appbar_subtitle_two.dart';
 import 'package:hafidomio_s_application2/widgets/app_bar/custom_app_bar.dart';
 import 'package:hafidomio_s_application2/widgets/custom_elevated_button.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class BluetoothScreen extends StatelessWidget {
   const BluetoothScreen({Key? key}) : super(key: key);
@@ -18,7 +19,7 @@ class BluetoothScreen extends StatelessWidget {
                 width: double.maxFinite,
                 padding: EdgeInsets.symmetric(horizontal: 25.h, vertical: 10.v),
                 child: Column(children: [
-                  Text("Enable bluetooth sharing",
+                  Text("Enable Bluetooth Sharing",
                       style: theme.textTheme.headlineSmall),
                   SizedBox(height: 5.v),
                   Align(
@@ -42,11 +43,14 @@ class BluetoothScreen extends StatelessWidget {
                             Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  CustomImageView(
-                                      imagePath: ImageConstant.imgThumbsUp,
+                                  Container(
+                                    child: SvgPicture.asset(
+                                      ImageConstant.imgThumbsUp,
                                       height: 28.v,
                                       width: 61.h,
-                                      margin: EdgeInsets.only(left: 8.h)),
+                                    ),
+                                    margin: EdgeInsets.only(left: 8.h),
+                                  ),
                                   Container(
                                       padding: EdgeInsets.all(3.h),
                                       decoration: BoxDecoration(

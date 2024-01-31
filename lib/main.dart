@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
           theme: theme,
           title: 'hafidomio_s_application2',
           debugShowCheckedModeBanner: false,
-          initialRoute: AppRoutes.onboardingOneScreen,
+          initialRoute: AppRoutes.welcomeSignupScreen,
           routes: AppRoutes.routes,
         );
       },

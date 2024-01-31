@@ -12,7 +12,8 @@ class LevelHearScreen extends StatelessWidget {
   String levelHear = "";
 
   List<String> radioList = [
-    "msg_moderate_41_60",
+    "msg_mild_20_40_db",
+    "msg_moderate_41_60db",
     "msg_severe_61_80_db",
     "msg_profound_81_db"
   ];
@@ -65,11 +66,22 @@ class LevelHearScreen extends StatelessWidget {
   /// Section Widget
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
-        title: SizedBox(width: 276.h, child: Divider(indent: 24.h)),
+        title: Padding(
+            padding: EdgeInsets.only(left: 25.h),
+            child: Container(
+                height: 6.v,
+                width: 252.h,
+                decoration: BoxDecoration(
+                    color: appTheme.gray30001,
+                    borderRadius: BorderRadius.circular(3.h)),
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(3.h),
+                    child: LinearProgressIndicator(
+                        value: 1, backgroundColor: appTheme.gray30001)))),
         actions: [
           AppbarSubtitleTwo(
               text: "Skip",
-              margin: EdgeInsets.symmetric(horizontal: 25.h, vertical: 17.v))
+              margin: EdgeInsets.symmetric(horizontal: 24.h, vertical: 17.v))
         ]);
   }
 
@@ -78,6 +90,16 @@ class LevelHearScreen extends StatelessWidget {
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 1.h),
         child: Column(children: [
+          Padding(
+              padding: EdgeInsets.only(top: 12.v),
+              child: CustomRadioButton(
+                  text: "Mild (20-40 dB)",
+                  value: radioList[0],
+                  groupValue: levelHear,
+                  padding: EdgeInsets.fromLTRB(24.h, 25.v, 30.h, 25.v),
+                  onChange: (value) {
+                    levelHear = value;
+                  })),
           Padding(
               padding: EdgeInsets.only(top: 12.v),
               child: CustomRadioButton(

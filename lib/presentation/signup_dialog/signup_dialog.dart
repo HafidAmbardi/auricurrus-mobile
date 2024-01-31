@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hafidomio_s_application2/core/app_export.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 // ignore_for_file: must_be_immutable
 class SignupDialog extends StatelessWidget {
@@ -23,10 +24,12 @@ class SignupDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CustomImageView(
-            imagePath: ImageConstant.imgSettings,
-            height: 22.v,
-            width: 28.h,
+          Container(
+            child: SvgPicture.asset(
+              ImageConstant.imgSettings,
+              height: 22.v,
+              width: 28.h,
+            ),
             alignment: Alignment.center,
           ),
           SizedBox(height: 15.v),
@@ -52,14 +55,16 @@ class SignupDialog extends StatelessWidget {
             ),
             child: Row(
               children: [
-                CustomImageView(
-                  imagePath: ImageConstant.imgEllipse6355,
-                  height: 32.adaptSize,
-                  width: 32.adaptSize,
-                  radius: BorderRadius.circular(
-                    16.h,
+                Container(
+                  child: CustomImageView(
+                    imagePath: ImageConstant.imgEllipse6355,
+                    height: 32.adaptSize,
+                    width: 32.adaptSize,
+                    radius: BorderRadius.circular(
+                      16.h,
+                    ),
+                    margin: EdgeInsets.symmetric(vertical: 2.v),
                   ),
-                  margin: EdgeInsets.symmetric(vertical: 2.v),
                 ),
                 Expanded(
                   child: Padding(

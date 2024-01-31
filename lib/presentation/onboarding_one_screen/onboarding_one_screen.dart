@@ -3,6 +3,7 @@ import 'package:hafidomio_s_application2/core/app_export.dart';
 import 'package:hafidomio_s_application2/widgets/app_bar/appbar_subtitle_two.dart';
 import 'package:hafidomio_s_application2/widgets/app_bar/custom_app_bar.dart';
 import 'package:hafidomio_s_application2/widgets/custom_elevated_button.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class OnboardingOneScreen extends StatelessWidget {
   const OnboardingOneScreen({Key? key}) : super(key: key);
@@ -16,10 +17,8 @@ class OnboardingOneScreen extends StatelessWidget {
                 width: double.maxFinite,
                 padding: EdgeInsets.symmetric(horizontal: 25.h, vertical: 24.v),
                 child: Column(children: [
-                  CustomImageView(
-                      imagePath: ImageConstant.imgUndrawWelcomingReX0qo,
-                      height: 269.v,
-                      width: 236.h),
+                  SvgPicture.asset(ImageConstant.imgUndrawWelcomingReX0qo,
+                      height: 269.v, width: 236.h),
                   SizedBox(height: 48.v),
                   Container(
                       width: 288.h,

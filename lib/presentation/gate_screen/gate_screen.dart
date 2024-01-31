@@ -4,6 +4,7 @@ import 'package:hafidomio_s_application2/widgets/app_bar/appbar_trailing_image.d
 import 'package:hafidomio_s_application2/widgets/app_bar/custom_app_bar.dart';
 import 'package:hafidomio_s_application2/widgets/custom_elevated_button.dart';
 import 'package:hafidomio_s_application2/presentation/signup_dialog/signup_dialog.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class GateScreen extends StatelessWidget {
   const GateScreen({Key? key}) : super(key: key);
@@ -19,10 +20,8 @@ class GateScreen extends StatelessWidget {
                 child:
                     Column(mainAxisAlignment: MainAxisAlignment.end, children: [
                   SizedBox(height: 76.v),
-                  CustomImageView(
-                      imagePath: ImageConstant.imgLogo,
-                      height: 106.v,
-                      width: 136.h),
+                  SvgPicture.asset(ImageConstant.imgLogo,
+                      height: 106.v, width: 136.h),
                   SizedBox(height: 26.v),
                   Text("Hear Everywhere", style: theme.textTheme.headlineSmall),
                   Spacer(),
@@ -32,10 +31,8 @@ class GateScreen extends StatelessWidget {
                           margin: EdgeInsets.only(left: 30.h),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8.h)),
-                          child: CustomImageView(
-                              imagePath: ImageConstant.imgArrowleft,
-                              height: 24.adaptSize,
-                              width: 24.adaptSize)),
+                          child: SvgPicture.asset(ImageConstant.imgArrowleft,
+                              height: 24.adaptSize, width: 24.adaptSize)),
                       buttonStyle: CustomButtonStyles.none,
                       decoration: CustomButtonStyles
                           .gradientIndigoAToPrimaryDecoration),
@@ -44,10 +41,8 @@ class GateScreen extends StatelessWidget {
                       text: "Sign-Up with Google",
                       leftIcon: Container(
                           margin: EdgeInsets.only(right: 10.h),
-                          child: CustomImageView(
-                              imagePath: ImageConstant.imgGoogle,
-                              height: 25.adaptSize,
-                              width: 25.adaptSize)),
+                          child: SvgPicture.asset(ImageConstant.imgGoogle,
+                              height: 25.adaptSize, width: 25.adaptSize)),
                       buttonStyle: CustomButtonStyles.none,
                       decoration:
                           CustomButtonStyles.gradientGrayToGrayDecoration,

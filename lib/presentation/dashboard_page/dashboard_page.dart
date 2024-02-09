@@ -13,6 +13,7 @@ import 'package:hafidomio_s_application2/widgets/app_bar/custom_app_bar.dart';
 import 'package:hafidomio_s_application2/widgets/custom_icon_button.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 // ignore_for_file: must_be_immutable
 class DashboardPage extends StatelessWidget {
@@ -113,22 +114,15 @@ class DashboardPage extends StatelessWidget {
                             child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  AppbarImage(
-                                      imagePath: ImageConstant.imgShape,
-                                      margin: EdgeInsets.only(
-                                          top: 12.v, bottom: 8.v)),
-                                  AppbarImage(
-                                      imagePath:
-                                          ImageConstant.imgSettingsIndigoA700,
-                                      margin: EdgeInsets.only(
-                                          top: 5.v, bottom: 6.v)),
-                                  AppbarImage(
-                                      imagePath: ImageConstant.imgShape,
-                                      margin: EdgeInsets.only(
-                                          top: 8.v, bottom: 7.v)),
+                                  Container(
+                                    child: SvgPicture.asset(
+                                      ImageConstant.imgGroup,
+                                    ),
+                                    margin: EdgeInsets.only(top: 3.v),
+                                  ),
                                   Padding(
                                       padding: EdgeInsets.only(
-                                          left: 4.h, right: 16.h, bottom: 2.v),
+                                          right: 16.h, bottom: 2.v),
                                       child: RichText(
                                           text: TextSpan(children: [
                                             TextSpan(
@@ -148,22 +142,14 @@ class DashboardPage extends StatelessWidget {
   }
 
   /// Section Widget
+  /// Put Google Map here
   Widget _buildMap(BuildContext context) {
     return SizedBox(
         height: 160.v,
         width: 325.h,
-        child: GoogleMap(
-            mapType: MapType.normal,
-            initialCameraPosition: CameraPosition(
-                target: LatLng(37.43296265331129, -122.08832357078792),
-                zoom: 14.4746),
-            onMapCreated: (GoogleMapController controller) {
-              googleMapController.complete(controller);
-            },
-            zoomControlsEnabled: false,
-            zoomGesturesEnabled: false,
-            myLocationButtonEnabled: false,
-            myLocationEnabled: false));
+        child: Container(
+          color: Colors.black,
+        ));
   }
 
   /// Section Widget
@@ -216,8 +202,8 @@ class DashboardPage extends StatelessWidget {
                               width: 42.adaptSize,
                               padding: EdgeInsets.all(7.h),
                               decoration: IconButtonStyleHelper.fillGreen,
-                              child: CustomImageView(
-                                  imagePath: ImageConstant.imgCheckmark)),
+                              child:
+                                  SvgPicture.asset(ImageConstant.imgCheckmark)),
                           Padding(
                               padding: EdgeInsets.only(
                                   left: 12.h, top: 12.v, bottom: 12.v),
@@ -231,10 +217,12 @@ class DashboardPage extends StatelessWidget {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CustomImageView(
-                            imagePath: ImageConstant.imgThumbsUp,
-                            height: 25.v,
-                            width: 54.h,
+                        Container(
+                            child: SvgPicture.asset(
+                              ImageConstant.imgThumbsUp,
+                              height: 25.v,
+                              width: 54.h,
+                            ),
                             margin: EdgeInsets.only(left: 7.h)),
                         Container(
                             padding: EdgeInsets.all(2.h),
@@ -294,10 +282,9 @@ class DashboardPage extends StatelessWidget {
                                                                 alignment: Alignment
                                                                     .centerLeft,
                                                                 children: [
-                                                                  CustomImageView(
-                                                                      imagePath:
-                                                                          ImageConstant
-                                                                              .imgClose,
+                                                                  SvgPicture.asset(
+                                                                      ImageConstant
+                                                                          .imgClose,
                                                                       height: 14
                                                                           .adaptSize,
                                                                       width: 14
@@ -305,10 +292,9 @@ class DashboardPage extends StatelessWidget {
                                                                       alignment:
                                                                           Alignment
                                                                               .centerLeft),
-                                                                  CustomImageView(
-                                                                      imagePath:
-                                                                          ImageConstant
-                                                                              .imgContrastIndigoA70001,
+                                                                  SvgPicture.asset(
+                                                                      ImageConstant
+                                                                          .imgContrastIndigoA70001,
                                                                       height: 14
                                                                           .adaptSize,
                                                                       width: 14
@@ -316,10 +302,9 @@ class DashboardPage extends StatelessWidget {
                                                                       alignment:
                                                                           Alignment
                                                                               .centerLeft),
-                                                                  CustomImageView(
-                                                                      imagePath:
-                                                                          ImageConstant
-                                                                              .imgClose,
+                                                                  SvgPicture.asset(
+                                                                      ImageConstant
+                                                                          .imgClose,
                                                                       height: 14
                                                                           .adaptSize,
                                                                       width: 14
@@ -327,10 +312,9 @@ class DashboardPage extends StatelessWidget {
                                                                       alignment:
                                                                           Alignment
                                                                               .centerRight),
-                                                                  CustomImageView(
-                                                                      imagePath:
-                                                                          ImageConstant
-                                                                              .imgContrastIndigoA7000114x14,
+                                                                  SvgPicture.asset(
+                                                                      ImageConstant
+                                                                          .imgContrastIndigoA7000114x14,
                                                                       height: 14
                                                                           .adaptSize,
                                                                       width: 14
@@ -338,82 +322,86 @@ class DashboardPage extends StatelessWidget {
                                                                       alignment:
                                                                           Alignment
                                                                               .centerRight),
-                                                                  CustomImageView(
-                                                                      imagePath:
-                                                                          ImageConstant
-                                                                              .imgClose,
-                                                                      height: 14
-                                                                          .adaptSize,
-                                                                      width: 14
-                                                                          .adaptSize,
-                                                                      alignment:
-                                                                          Alignment
-                                                                              .bottomCenter,
+                                                                  Container(
+                                                                      child: SvgPicture
+                                                                          .asset(
+                                                                        ImageConstant
+                                                                            .imgClose,
+                                                                        height:
+                                                                            14.adaptSize,
+                                                                        width: 14
+                                                                            .adaptSize,
+                                                                        alignment:
+                                                                            Alignment.bottomCenter,
+                                                                      ),
                                                                       margin: EdgeInsets.only(
                                                                           bottom:
                                                                               3.v)),
-                                                                  CustomImageView(
-                                                                      imagePath:
-                                                                          ImageConstant
-                                                                              .imgContrast14x14,
-                                                                      height: 14
-                                                                          .adaptSize,
-                                                                      width: 14
-                                                                          .adaptSize,
-                                                                      alignment:
-                                                                          Alignment
-                                                                              .bottomCenter,
+                                                                  Container(
+                                                                      child: SvgPicture
+                                                                          .asset(
+                                                                        ImageConstant
+                                                                            .imgContrast14x14,
+                                                                        height:
+                                                                            14.adaptSize,
+                                                                        width: 14
+                                                                            .adaptSize,
+                                                                        alignment:
+                                                                            Alignment.bottomCenter,
+                                                                      ),
                                                                       margin: EdgeInsets.only(
                                                                           bottom:
                                                                               3.v)),
-                                                                  CustomImageView(
-                                                                      imagePath:
-                                                                          ImageConstant
-                                                                              .imgCloseIndigoA70001,
-                                                                      height: 14
-                                                                          .adaptSize,
-                                                                      width: 14
-                                                                          .adaptSize,
-                                                                      alignment:
-                                                                          Alignment
-                                                                              .topCenter,
+                                                                  Container(
+                                                                      child: SvgPicture
+                                                                          .asset(
+                                                                        ImageConstant
+                                                                            .imgCloseIndigoA70001,
+                                                                        height:
+                                                                            14.adaptSize,
+                                                                        width: 14
+                                                                            .adaptSize,
+                                                                        alignment:
+                                                                            Alignment.topCenter,
+                                                                      ),
                                                                       margin: EdgeInsets.only(
                                                                           top: 2
                                                                               .v)),
-                                                                  CustomImageView(
-                                                                      imagePath:
-                                                                          ImageConstant
-                                                                              .imgContrast1,
-                                                                      height: 14
-                                                                          .adaptSize,
-                                                                      width: 14
-                                                                          .adaptSize,
-                                                                      alignment:
-                                                                          Alignment
-                                                                              .topCenter,
+                                                                  Container(
+                                                                      child: SvgPicture
+                                                                          .asset(
+                                                                        ImageConstant
+                                                                            .imgContrast1,
+                                                                        height:
+                                                                            14.adaptSize,
+                                                                        width: 14
+                                                                            .adaptSize,
+                                                                        alignment:
+                                                                            Alignment.topCenter,
+                                                                      ),
                                                                       margin: EdgeInsets.only(
                                                                           top: 2
                                                                               .v)),
-                                                                  CustomImageView(
-                                                                      imagePath:
-                                                                          ImageConstant
-                                                                              .imgVectorIndigoA70001,
-                                                                      height: 2
-                                                                          .adaptSize,
-                                                                      width: 2
-                                                                          .adaptSize,
-                                                                      alignment:
-                                                                          Alignment
-                                                                              .topLeft,
+                                                                  Container(
+                                                                      child: SvgPicture
+                                                                          .asset(
+                                                                        ImageConstant
+                                                                            .imgVectorIndigoA70001,
+                                                                        height:
+                                                                            2.adaptSize,
+                                                                        width: 2
+                                                                            .adaptSize,
+                                                                        alignment:
+                                                                            Alignment.topLeft,
+                                                                      ),
                                                                       margin: EdgeInsets.only(
                                                                           left: 15
                                                                               .h,
                                                                           top: 19
                                                                               .v)),
-                                                                  CustomImageView(
-                                                                      imagePath:
-                                                                          ImageConstant
-                                                                              .imgVectorIndigoA700012x2,
+                                                                  SvgPicture.asset(
+                                                                      ImageConstant
+                                                                          .imgVectorIndigoA700012x2,
                                                                       height: 2
                                                                           .adaptSize,
                                                                       width: 2
@@ -430,37 +418,35 @@ class DashboardPage extends StatelessWidget {
                                                                           width: 7.h,
                                                                           margin: EdgeInsets.only(left: 8.h, top: 12.v),
                                                                           child: Stack(alignment: Alignment.center, children: [
-                                                                            CustomImageView(
-                                                                                imagePath: ImageConstant.imgSettingsIndigoA70001,
+                                                                            SvgPicture.asset(ImageConstant.imgSettingsIndigoA70001,
                                                                                 height: 6.v,
                                                                                 width: 7.h,
                                                                                 alignment: Alignment.center),
-                                                                            CustomImageView(
-                                                                                imagePath: ImageConstant.imgSettingsIndigoA70001,
+                                                                            SvgPicture.asset(ImageConstant.imgSettingsIndigoA70001,
                                                                                 height: 6.v,
                                                                                 width: 7.h,
                                                                                 alignment: Alignment.center)
                                                                           ]))),
-                                                                  CustomImageView(
-                                                                      imagePath:
-                                                                          ImageConstant
-                                                                              .imgVectorIndigoA70001,
-                                                                      height: 2
-                                                                          .adaptSize,
-                                                                      width: 2
-                                                                          .adaptSize,
-                                                                      alignment:
-                                                                          Alignment
-                                                                              .topRight,
+                                                                  Container(
+                                                                      child: SvgPicture
+                                                                          .asset(
+                                                                        ImageConstant
+                                                                            .imgVectorIndigoA70001,
+                                                                        height:
+                                                                            2.adaptSize,
+                                                                        width: 2
+                                                                            .adaptSize,
+                                                                        alignment:
+                                                                            Alignment.topRight,
+                                                                      ),
                                                                       margin: EdgeInsets.only(
                                                                           top: 19
                                                                               .v,
                                                                           right:
                                                                               15.h)),
-                                                                  CustomImageView(
-                                                                      imagePath:
-                                                                          ImageConstant
-                                                                              .imgVectorIndigoA700012x2,
+                                                                  SvgPicture.asset(
+                                                                      ImageConstant
+                                                                          .imgVectorIndigoA700012x2,
                                                                       height: 2
                                                                           .adaptSize,
                                                                       width: 2
@@ -477,13 +463,11 @@ class DashboardPage extends StatelessWidget {
                                                                           width: 14.h,
                                                                           margin: EdgeInsets.only(top: 7.v, right: 1.h),
                                                                           child: Stack(alignment: Alignment.center, children: [
-                                                                            CustomImageView(
-                                                                                imagePath: ImageConstant.imgSettingsIndigoA70001,
+                                                                            SvgPicture.asset(ImageConstant.imgSettingsIndigoA70001,
                                                                                 height: 12.v,
                                                                                 width: 14.h,
                                                                                 alignment: Alignment.center),
-                                                                            CustomImageView(
-                                                                                imagePath: ImageConstant.imgSettingsIndigoA70001,
+                                                                            SvgPicture.asset(ImageConstant.imgSettingsIndigoA70001,
                                                                                 height: 12.v,
                                                                                 width: 14.h,
                                                                                 alignment: Alignment.center)
@@ -507,124 +491,144 @@ class DashboardPage extends StatelessWidget {
                                                                           mainAxisAlignment:
                                                                               MainAxisAlignment.center,
                                                                           children: [
-                                                                            CustomImageView(
-                                                                                imagePath: ImageConstant.imgVectorIndigoA700011x1,
+                                                                            SvgPicture.asset(ImageConstant.imgVectorIndigoA700011x1,
                                                                                 height: 1.adaptSize,
                                                                                 width: 1.adaptSize),
-                                                                            CustomImageView(
-                                                                                imagePath: ImageConstant.imgVectorIndigoA700012x2,
+                                                                            SvgPicture.asset(ImageConstant.imgVectorIndigoA700012x2,
                                                                                 height: 1.adaptSize,
                                                                                 width: 1.adaptSize)
                                                                           ]))
                                                                 ]))),
-                                                    CustomImageView(
-                                                        imagePath: ImageConstant
-                                                            .imgGroup142,
-                                                        height: 9.adaptSize,
-                                                        width: 9.adaptSize,
-                                                        alignment:
-                                                            Alignment.topLeft,
+                                                    Container(
+                                                        child: SvgPicture.asset(
+                                                          ImageConstant
+                                                              .imgGroup142,
+                                                          height: 9.adaptSize,
+                                                          width: 9.adaptSize,
+                                                          alignment:
+                                                              Alignment.topLeft,
+                                                        ),
                                                         margin: EdgeInsets.only(
                                                             left: 1.h)),
-                                                    CustomImageView(
-                                                        imagePath: ImageConstant
-                                                            .imgGroup142,
-                                                        height: 9.adaptSize,
-                                                        width: 9.adaptSize,
-                                                        alignment: Alignment
-                                                            .bottomRight,
+                                                    Container(
+                                                        child: SvgPicture.asset(
+                                                          ImageConstant
+                                                              .imgGroup142,
+                                                          height: 9.adaptSize,
+                                                          width: 9.adaptSize,
+                                                          alignment: Alignment
+                                                              .bottomRight,
+                                                        ),
                                                         margin: EdgeInsets.only(
                                                             right: 1.h)),
-                                                    CustomImageView(
-                                                        imagePath: ImageConstant
-                                                            .imgVectorIndigoA700012x2,
-                                                        height: 5.adaptSize,
-                                                        width: 5.adaptSize,
-                                                        alignment: Alignment
-                                                            .bottomLeft,
+                                                    Container(
+                                                        child: SvgPicture.asset(
+                                                          ImageConstant
+                                                              .imgVectorIndigoA700012x2,
+                                                          height: 5.adaptSize,
+                                                          width: 5.adaptSize,
+                                                          alignment: Alignment
+                                                              .bottomLeft,
+                                                        ),
                                                         margin: EdgeInsets.only(
                                                             left: 3.h)),
-                                                    CustomImageView(
-                                                        imagePath: ImageConstant
-                                                            .imgVectorIndigoA700012x2,
-                                                        height: 5.adaptSize,
-                                                        width: 5.adaptSize,
-                                                        alignment:
-                                                            Alignment.topRight,
+                                                    Container(
+                                                        child: SvgPicture.asset(
+                                                          ImageConstant
+                                                              .imgVectorIndigoA700012x2,
+                                                          height: 5.adaptSize,
+                                                          width: 5.adaptSize,
+                                                          alignment: Alignment
+                                                              .topRight,
+                                                        ),
                                                         margin: EdgeInsets.only(
                                                             right: 3.h)),
-                                                    CustomImageView(
-                                                        imagePath: ImageConstant
-                                                            .imgContrastIndigoA700019x10,
-                                                        height: 9.v,
-                                                        width: 10.h,
-                                                        alignment: Alignment
-                                                            .bottomLeft,
+                                                    Container(
+                                                        child: SvgPicture.asset(
+                                                          ImageConstant
+                                                              .imgContrastIndigoA700019x10,
+                                                          height: 9.v,
+                                                          width: 10.h,
+                                                          alignment: Alignment
+                                                              .bottomLeft,
+                                                        ),
                                                         margin: EdgeInsets.only(
                                                             left: 2.h,
                                                             bottom: 4.v)),
-                                                    CustomImageView(
-                                                        imagePath: ImageConstant
-                                                            .imgVectorIndigoA700012x3,
-                                                        height: 2.v,
-                                                        width: 3.h,
-                                                        alignment: Alignment
-                                                            .bottomLeft,
+                                                    Container(
+                                                        child: SvgPicture.asset(
+                                                          ImageConstant
+                                                              .imgVectorIndigoA700012x3,
+                                                          height: 2.v,
+                                                          width: 3.h,
+                                                          alignment: Alignment
+                                                              .bottomLeft,
+                                                        ),
                                                         margin: EdgeInsets.only(
                                                             left: 14.h,
                                                             bottom: 2.v)),
-                                                    CustomImageView(
-                                                        imagePath: ImageConstant
-                                                            .imgVectorIndigoA700012x2,
-                                                        height: 1.adaptSize,
-                                                        width: 1.adaptSize,
-                                                        alignment: Alignment
-                                                            .bottomLeft,
+                                                    Container(
+                                                        child: SvgPicture.asset(
+                                                          ImageConstant
+                                                              .imgVectorIndigoA700012x2,
+                                                          height: 1.adaptSize,
+                                                          width: 1.adaptSize,
+                                                          alignment: Alignment
+                                                              .bottomLeft,
+                                                        ),
                                                         margin: EdgeInsets.only(
                                                             left: 12.h,
                                                             bottom: 3.v)),
-                                                    CustomImageView(
-                                                        imagePath: ImageConstant
-                                                            .imgSettingsIndigoA700019x10,
-                                                        height: 9.v,
-                                                        width: 10.h,
-                                                        alignment:
-                                                            Alignment.topRight,
+                                                    Container(
+                                                        child: SvgPicture.asset(
+                                                          ImageConstant
+                                                              .imgSettingsIndigoA700019x10,
+                                                          height: 9.v,
+                                                          width: 10.h,
+                                                          alignment: Alignment
+                                                              .topRight,
+                                                        ),
                                                         margin: EdgeInsets.only(
                                                             top: 4.v,
                                                             right: 2.h)),
-                                                    CustomImageView(
-                                                        imagePath: ImageConstant
-                                                            .imgVectorIndigoA700012x3,
-                                                        height: 2.v,
-                                                        width: 3.h,
-                                                        alignment:
-                                                            Alignment.topRight,
+                                                    Container(
+                                                        child: SvgPicture.asset(
+                                                          ImageConstant
+                                                              .imgVectorIndigoA700012x3,
+                                                          height: 2.v,
+                                                          width: 3.h,
+                                                          alignment: Alignment
+                                                              .topRight,
+                                                        ),
                                                         margin: EdgeInsets.only(
                                                             top: 2.v,
                                                             right: 14.h)),
-                                                    CustomImageView(
-                                                        imagePath: ImageConstant
-                                                            .imgVectorIndigoA700012x2,
-                                                        height: 1.adaptSize,
-                                                        width: 1.adaptSize,
-                                                        alignment:
-                                                            Alignment.topRight,
+                                                    Container(
+                                                        child: SvgPicture.asset(
+                                                          ImageConstant
+                                                              .imgVectorIndigoA700012x2,
+                                                          height: 1.adaptSize,
+                                                          width: 1.adaptSize,
+                                                          alignment: Alignment
+                                                              .topRight,
+                                                        ),
                                                         margin: EdgeInsets.only(
                                                             top: 3.v,
                                                             right: 12.h))
                                                   ]))),
-                                      CustomImageView(
-                                          imagePath: ImageConstant
+                                      SvgPicture.asset(
+                                          ImageConstant
                                               .imgVectorOnerrorcontainer42x25,
                                           height: 48.adaptSize,
                                           width: 48.adaptSize,
                                           alignment: Alignment.centerRight)
                                     ]))),
-                        CustomImageView(
-                            imagePath: ImageConstant.imgThumbsUp,
-                            height: 25.v,
-                            width: 54.h,
+                        Container(
+                            child: SvgPicture.asset(
+                              ImageConstant.imgThumbsUp,
+                              height: 25.v,
+                              width: 54.h,
+                            ),
                             margin: EdgeInsets.only(left: 7.h))
                       ]))
             ]));

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hafidomio_s_application2/core/app_export.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomFloatingButton extends StatelessWidget {
   CustomFloatingButton({
@@ -40,22 +41,24 @@ class CustomFloatingButton extends StatelessWidget {
   }
 
   Widget get fabWidget => FloatingActionButton(
-        backgroundColor: backgroundColor,
+        backgroundColor: theme.colorScheme.primaryContainer.withOpacity(1),
         onPressed: onTap,
-        child: Container(
-          alignment: Alignment.center,
-          width: width ?? 0,
-          height: height ?? 0,
-          decoration: decoration ??
-              BoxDecoration(
-                color: theme.colorScheme.onErrorContainer.withOpacity(1),
-                borderRadius: BorderRadius.circular(4.h),
-                border: Border.all(
-                  color: appTheme.gray200,
-                  width: 1.h,
-                ),
-              ),
-          child: child,
+        shape: CircleBorder(
+          side: BorderSide(
+            color: theme.colorScheme.primaryContainer
+                .withOpacity(1), // Border color
+            width: 2.0, // Border width
+          ),
         ),
+        child: Container(
+            alignment: Alignment.center,
+            width: 40.v,
+            height: height ?? 0,
+            decoration: decoration ??
+                BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: theme.colorScheme.errorContainer.withOpacity(1),
+                ),
+            child: child),
       );
 }

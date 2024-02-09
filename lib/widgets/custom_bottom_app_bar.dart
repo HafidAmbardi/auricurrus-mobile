@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hafidomio_s_application2/core/app_export.dart';
+// svg package
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomBottomAppBar extends StatefulWidget {
   CustomBottomAppBar({this.onChanged});

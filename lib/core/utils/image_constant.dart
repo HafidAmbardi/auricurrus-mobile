@@ -86,6 +86,12 @@ class ImageConstant {
 
   static String imgLock = '$imagePath/img_lock.svg';
 
+  static String imgNav = '$imagePath/img_nav_icon.svg';
+
+  static String imgShapeC = '$imagePath/img_shape_c.svg';
+
+  static String imgGroup = '$imagePath/img_group.svg';
+
   // 3.1.4 Lempuyangan images
   static String imgThumbsUpIndigoA70001 =
       '$imagePath/img_thumbs_up_indigo_a700_01.svg';

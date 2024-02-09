@@ -3,6 +3,7 @@ import 'package:hafidomio_s_application2/core/app_export.dart';
 import 'package:hafidomio_s_application2/presentation/dashboard_page/dashboard_page.dart';
 import 'package:hafidomio_s_application2/widgets/custom_bottom_app_bar.dart';
 import 'package:hafidomio_s_application2/widgets/custom_floating_button.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 // ignore_for_file: must_be_immutable
 class DashboardContainerScreen extends StatelessWidget {
@@ -36,7 +37,11 @@ class DashboardContainerScreen extends StatelessWidget {
                         transitionDuration: Duration(seconds: 0)))),
             bottomNavigationBar: _buildNavbarsFiverdActive(context),
             floatingActionButton: CustomFloatingButton(
-                height: 92, width: 76, child: Icon(Icons.add)),
+                height: 92,
+                width: 76,
+                child: SvgPicture.asset(
+                  ImageConstant.imgNav,
+                )),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.centerDocked));
   }

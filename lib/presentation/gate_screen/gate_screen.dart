@@ -1,13 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:hafidomio_s_application2/backend/login_controller/login_controller.dart';
+import 'package:hafidomio_s_application2/backend/login_controller/login_state.dart';
 import 'package:hafidomio_s_application2/core/app_export.dart';
 import 'package:hafidomio_s_application2/widgets/app_bar/appbar_trailing_image.dart';
 import 'package:hafidomio_s_application2/widgets/app_bar/custom_app_bar.dart';
 import 'package:hafidomio_s_application2/widgets/custom_elevated_button.dart';
 import 'package:hafidomio_s_application2/presentation/signup_dialog/signup_dialog.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:sign_in_button/sign_in_button.dart';
 
-class GateScreen extends StatelessWidget {
-  const GateScreen({Key? key}) : super(key: key);
+class GateScreen extends StatefulHookConsumerWidget {
+  const GateScreen({super.key});
+
+  @override
+  ConsumerState<GateScreen> createState() => _GateScreenState();
+}
+
+class _GateScreenState extends ConsumerState<GateScreen> {
+  // const GateScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -46,11 +57,14 @@ class GateScreen extends StatelessWidget {
                       buttonStyle: CustomButtonStyles.none,
                       decoration:
                           CustomButtonStyles.gradientGrayToGrayDecoration,
-                      onPressed: () {
-                        onTapSignUpWithGoogle(context);
-                      })
+                      // onPressed: () {
+                      //   // onTapSignUpWithGoogle(context);
+                      //   // googleSignInButton();
+                      // }
+                      onPressed: ref.read(loginControllerProvider.notifier).login,)
                 ]))));
   }
+
 
   /// Section Widget
   PreferredSizeWidget _buildAppBar(BuildContext context) {
@@ -84,4 +98,30 @@ class GateScreen extends StatelessWidget {
               insetPadding: const EdgeInsets.only(left: 0),
             ));
   }
+
+  
+  Widget googleSignInButton() {
+    return Center(
+      child: SizedBox(
+        height: 50,
+        child: SignInButton(
+          Buttons.google,
+          text: 'Sign up with Google',
+          onPressed: ref.read(loginControllerProvider.notifier).login,
+        ),
+      ),
+    );
+  }
+
+//     Widget build(BuildContext context) {
+//     ref.listen<LoginState>(loginControllerProvider, ((previous, state) {
+//       if (state is LoginStateError) {
+//         ScaffoldMessenger.of(context).showSnackBar(
+//           const SnackBar(
+//             content: Text('error'),
+//           ),
+//         );
+//       }
+//     }));
+// }
 }

@@ -21,11 +21,24 @@ class Sizer extends StatelessWidget {
   /// Builds the widget whenever the orientation changes.
   final ResponsiveBuild builder;
 
+  static void init(BuildContext context) {
+    SizeUtils.setScreenSize(
+      MediaQuery.of(context).size,
+      MediaQuery.of(context).orientation,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    SizeUtils.setScreenSize(
+      // MediaQuery.of(context).size as BoxConstraints,
+      MediaQuery.of(context).size,
+      MediaQuery.of(context).orientation,
+    );
+    
     return LayoutBuilder(builder: (context, constraints) {
       return OrientationBuilder(builder: (context, orientation) {
-        SizeUtils.setScreenSize(constraints, orientation);
+        SizeUtils.setScreenSize(constraints as ui.Size, orientation);
         return builder(context, orientation, SizeUtils.deviceType);
       });
     });
@@ -51,22 +64,31 @@ class SizeUtils {
   static late double width;
 
   static void setScreenSize(
-    BoxConstraints constraints,
+    // BoxConstraints constraints,
+    Size size, 
     Orientation currentOrientation,
   ) {
     // Sets boxConstraints and orientation
-    boxConstraints = constraints;
+    boxConstraints = BoxConstraints(
+      maxHeight: size.height,
+      maxWidth: size.width,
+    );
     orientation = currentOrientation;
 
     // Sets screen width and height
     if (orientation == Orientation.portrait) {
       width =
-          boxConstraints.maxWidth.isNonZero(defaultValue: FIGMA_DESIGN_WIDTH);
-      height = boxConstraints.maxHeight.isNonZero();
+          // boxConstraints.maxWidth.isNonZero(defaultValue: FIGMA_DESIGN_WIDTH);
+          size.width.isNonZero(defaultValue: FIGMA_DESIGN_WIDTH);
+      height = size.height.isNonZero(defaultValue: FIGMA_DESIGN_WIDTH);
+            // boxConstraints.maxHeight.isNonZero(defaultValue: FIGMA_DESIGN_HEIGHT);
+
     } else {
       width =
-          boxConstraints.maxHeight.isNonZero(defaultValue: FIGMA_DESIGN_WIDTH);
-      height = boxConstraints.maxWidth.isNonZero();
+          // boxConstraints.maxHeight.isNonZero(defaultValue: FIGMA_DESIGN_HEIGHT);
+          size.height.isNonZero(defaultValue: FIGMA_DESIGN_WIDTH);
+      // height = boxConstraints.maxWidth.isNonZero(defaultValue: FIGMA_DESIGN_WIDTH);
+      height = size.width.isNonZero(defaultValue: FIGMA_DESIGN_WIDTH);
     }
     deviceType = DeviceType.mobile;
   }

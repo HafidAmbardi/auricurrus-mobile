@@ -1,73 +1,252 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hafidomio_s_application2/backend/controllers/db-service.dart';
+import 'package:hafidomio_s_application2/backend/model/user.dart';
+import 'package:hafidomio_s_application2/backend/providers/auth_provider.dart';
 import 'package:hafidomio_s_application2/core/app_export.dart';
 import 'package:hafidomio_s_application2/widgets/app_bar/appbar_subtitle_two.dart';
 import 'package:hafidomio_s_application2/widgets/app_bar/custom_app_bar.dart';
 import 'package:hafidomio_s_application2/widgets/custom_elevated_button.dart';
 import 'package:hafidomio_s_application2/widgets/custom_icon_button.dart';
 import 'package:hafidomio_s_application2/widgets/custom_text_form_field.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-// ignore_for_file: must_be_immutable
-class NameFilledScreen extends StatelessWidget {
+
+class NameFilledScreen extends HookConsumerWidget {
   NameFilledScreen({Key? key}) : super(key: key);
 
   TextEditingController nameController = TextEditingController();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // initialize services
+    final dbService _service = dbService();
+    final authState = ref.watch(authStateProvider);
+    final User? authenticatedUser = authState.value;
+
+    String? userEmail = authenticatedUser?.email;
+    String? userUID = authenticatedUser?.uid;
+
+    // verify authed user
+    debugPrint("userEmail" + userEmail.toString());
+    debugPrint("userUID" + userUID.toString());
+
     return SafeArea(
-        child: Scaffold(
-            resizeToAvoidBottomInset: false,
-            appBar: _buildAppBar(context),
-            body: SizedBox(
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: _buildAppBar(context),
+        body: StreamBuilder<QuerySnapshot>(
+          stream: _service.getUsers(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // The stream is still waiting for data
+              return CircularProgressIndicator();
+            } else if (snapshot.hasError) {
+              // Handle error
+              return Text("Error: ${snapshot.error}");
+            } else {
+              // Successfully received data
+              List<QueryDocumentSnapshot> documents = snapshot.data!.docs;
+
+              // Process the documents to get the user with the matching email
+              dbUser? user;
+              for (var document in documents) {
+                var userData = document.data() as Map<String, dynamic>;
+                if (userData['email'] == userEmail) {
+                  user = dbUser.fromJson(userData);
+                  break;
+                }
+              }
+              debugPrint(user.toString());
+
+              return SizedBox(
                 width: SizeUtils.width,
                 child: SingleChildScrollView(
-                    child: Column(children: [
-                  Text("We need to know you",
-                      style: theme.textTheme.headlineSmall),
-                  SizedBox(height: 5.v),
-                  Container(
-                      width: 297.h,
-                      margin: EdgeInsets.symmetric(horizontal: 38.h),
-                      child: Text(
+                  child: Column(
+                    children: [
+                      Text("We need to know you",
+                          style: theme.textTheme.headlineSmall),
+                      SizedBox(height: 5.v),
+                      Container(
+                        width: 297.h,
+                        margin: EdgeInsets.symmetric(horizontal: 38.h),
+                        child: Text(
                           "Let us know how we call you and we got this!",
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,
                           style: CustomTextStyles.bodyLargePrimaryContainer_1
-                              .copyWith(height: 1.40))),
-                  SizedBox(height: 14.v),
-                  Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
+                              .copyWith(height: 1.40),
+                        ),
+                      ),
+                      SizedBox(height: 14.v),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
                           padding: EdgeInsets.only(left: 25.h),
                           child: Text("Nickname",
-                              style: CustomTextStyles
-                                  .titleMediumPrimaryContainer))),
-                  SizedBox(height: 7.v),
-                  Opacity(
-                      opacity: 0.8,
-                      child: Padding(
+                              style: CustomTextStyles.titleMediumPrimaryContainer),
+                        ),
+                      ),
+                      SizedBox(height: 7.v),
+                      Opacity(
+                        opacity: 0.8,
+                        child: Padding(
                           padding: EdgeInsets.symmetric(horizontal: 25.h),
                           child: CustomTextFormField(
-                              controller: nameController,
-                              hintText: "Josephine",
-                              hintStyle:
-                                  CustomTextStyles.titleMediumPrimaryContainer,
-                              textInputAction: TextInputAction.done))),
-                  SizedBox(height: 354.v),
-                  CustomElevatedButton(
-                      text: "Continue",
-                      margin: EdgeInsets.only(left: 24.h, right: 25.h),
-                      buttonStyle: CustomButtonStyles.none,
-                      decoration: CustomButtonStyles
-                          .gradientIndigoAToPrimaryTL8Decoration,
-                      onPressed: () {
-                        onTapContinue(context);
-                      }),
-                  SizedBox(height: 73.v),
-                  _buildIosAlphabeticKeyboard(context)
-                ])))));
+                            controller: nameController,
+                            hintText: "Josephine",
+                            hintStyle: CustomTextStyles.titleMediumPrimaryContainer,
+                            textInputAction: TextInputAction.done,
+                            onChanged: (value) {
+                              dbUser updatedUser = user!.copyWith(
+                                name: value,
+                                updatedOn: Timestamp.now(),
+                              );
+                              _service.updateUser(userUID!, updatedUser);
+                            },
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 354.v),
+                      CustomElevatedButton(
+                        text: "Continue",
+                        margin: EdgeInsets.only(left: 24.h, right: 25.h),
+                        buttonStyle: CustomButtonStyles.none,
+                        decoration: CustomButtonStyles.gradientIndigoAToPrimaryTL8Decoration,
+                        onPressed: () {
+                          onTapContinue(context);
+                        },
+                      ),
+                      SizedBox(height: 73.v),
+                      _buildIosAlphabeticKeyboard(context),
+                    ],
+                  ),
+                ),
+              );
+            }
+          },
+        ),
+      ),
+    );
   }
+}
+
+// // ignore_for_file: must_be_immutable
+// class NameFilledScreen extends HookConsumerWidget {
+//   NameFilledScreen({Key? key}) : super(key: key);
+
+//   TextEditingController nameController = TextEditingController();
+
+//   @override
+//   Widget build(BuildContext context, WidgetRef ref) {
+//     // initialize services
+//     final dbService _service = dbService();
+//     final authState = ref.watch(authStateProvider);
+//     final User? authenticatedUser = authState.value;
+
+//     String? userEmail = authenticatedUser?.email;
+//     String? userUID = authenticatedUser?.uid;
+
+//     // verify authed user
+//     debugPrint("userEmail" + userEmail.toString());
+//     debugPrint("userUID" + userUID.toString());
+
+//     // Future<dbUser?> user = _service.getUserByEmail(userEmail);
+
+//     return StreamBuilder<QuerySnapshot>(
+//       stream: _service.getUsers(),
+//       builder: (context, snapshot) {
+//         if (snapshot.connectionState == ConnectionState.waiting) {
+//           // The stream is still waiting for data
+//           return CircularProgressIndicator();
+//         } else if (snapshot.hasError) {
+//           // Handle error
+//           return Text("Error: ${snapshot.error}");
+//         } else {
+//           // Successfully received data
+//           List<QueryDocumentSnapshot> documents = snapshot.data!.docs;
+
+//           // Process the documents to get the user with the matching email
+//           dbUser? user;
+//           for (var document in documents) {
+//             var userData = document.data() as Map<String, dynamic>;
+//             if (userData['email'] == userEmail) {
+//               user = dbUser.fromJson(userData);
+//               break;
+//             }
+//           }
+//           debugPrint(user.toString());
+//         }
+//       },
+//     );
+
+//     return SafeArea(
+//       child: Scaffold(
+//         resizeToAvoidBottomInset: false,
+//         appBar: _buildAppBar(context),
+//         body: SizedBox(
+//           width: SizeUtils.width,
+//           child: SingleChildScrollView(
+//             child: Column(
+//               children: [
+//                 Text("We need to know you",
+//                     style: theme.textTheme.headlineSmall),
+//                 SizedBox(height: 5.v),
+//                 Container(
+//                     width: 297.h,
+//                     margin: EdgeInsets.symmetric(horizontal: 38.h),
+//                     child: Text("Let us know how we call you and we got this!",
+//                         maxLines: 2,
+//                         overflow: TextOverflow.ellipsis,
+//                         textAlign: TextAlign.center,
+//                         style: CustomTextStyles.bodyLargePrimaryContainer_1
+//                             .copyWith(height: 1.40))),
+//                 SizedBox(height: 14.v),
+//                 Align(
+//                     alignment: Alignment.centerLeft,
+//                     child: Padding(
+//                         padding: EdgeInsets.only(left: 25.h),
+//                         child: Text("Nickname",
+//                             style:
+//                                 CustomTextStyles.titleMediumPrimaryContainer))),
+//                 SizedBox(height: 7.v),
+//                 Opacity(
+//                   opacity: 0.8,
+//                   child: Padding(
+//                       padding: EdgeInsets.symmetric(horizontal: 25.h),
+//                       child: CustomTextFormField(
+//                           controller: nameController,
+//                           hintText: "Josephine",
+//                           hintStyle:
+//                               CustomTextStyles.titleMediumPrimaryContainer,
+//                           textInputAction: TextInputAction.done),
+//                       onChanged: (value) {
+//                         dbUser updatedUser = user.copyWith(
+//                             Nickname: value, updatedOn: Timestamp.now());
+//                         _service.updateUser(uid, updatedUser);
+//                       }),
+//                 ),
+//                 SizedBox(height: 354.v),
+//                 CustomElevatedButton(
+//                     text: "Continue",
+//                     margin: EdgeInsets.only(left: 24.h, right: 25.h),
+//                     buttonStyle: CustomButtonStyles.none,
+//                     decoration: CustomButtonStyles
+//                         .gradientIndigoAToPrimaryTL8Decoration,
+//                     onPressed: () {
+//                       onTapContinue(context);
+//                     }),
+//                 SizedBox(height: 73.v),
+//                 _buildIosAlphabeticKeyboard(context)
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
 
   /// Section Widget
   PreferredSizeWidget _buildAppBar(BuildContext context) {
@@ -436,4 +615,4 @@ class NameFilledScreen extends StatelessWidget {
   onTapContinue(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.levelHearScreen);
   }
-}
+

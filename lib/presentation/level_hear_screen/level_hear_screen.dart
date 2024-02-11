@@ -99,6 +99,10 @@ class LevelHearScreen extends StatelessWidget {
                   padding: EdgeInsets.fromLTRB(24.h, 25.v, 30.h, 25.v),
                   onChange: (value) {
                     levelHear = value;
+                  //   dbUser updatedUser = user.copyWith(
+                  //           darkMode: !user.darkMode,
+                  //           updatedOn: Timestamp.now());
+                  //       _service.updateUser(uid, updatedUser);
                   })),
           Padding(
               padding: EdgeInsets.only(top: 12.v),

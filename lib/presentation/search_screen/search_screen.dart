@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hafidomio_s_application2/core/app_export.dart';
 import 'package:hafidomio_s_application2/widgets/custom_search_view.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class SearchScreen extends StatelessWidget {
   SearchScreen({Key? key})

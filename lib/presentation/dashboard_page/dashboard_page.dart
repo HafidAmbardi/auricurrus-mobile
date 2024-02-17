@@ -11,6 +11,7 @@ import 'package:hafidomio_s_application2/widgets/app_bar/appbar_title.dart';
 import 'package:hafidomio_s_application2/widgets/app_bar/appbar_title_button.dart';
 import 'package:hafidomio_s_application2/widgets/app_bar/custom_app_bar.dart';
 import 'package:hafidomio_s_application2/widgets/custom_icon_button.dart';
+import 'package:hafidomio_s_application2/pages/map/map_page.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -149,6 +150,9 @@ class DashboardPage extends StatelessWidget {
         width: 325.h,
         child: Container(
           color: Colors.black,
+          child: MapPage(
+            showPlacesApiGoogleMapSearch: false,
+          ),
         ));
   }
 

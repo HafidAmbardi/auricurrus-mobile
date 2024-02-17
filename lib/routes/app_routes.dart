@@ -5,7 +5,7 @@ import 'package:hafidomio_s_application2/presentation/dashboard_container_screen
 import 'package:hafidomio_s_application2/presentation/trip_lis_screen/trip_lis_screen.dart';
 import 'package:hafidomio_s_application2/presentation/name_filled_screen/name_filled_screen.dart';
 import 'package:hafidomio_s_application2/presentation/gate_screen/gate_screen.dart';
-import 'package:hafidomio_s_application2/presentation/splash_screen/splash_screen.dart';
+// import 'package:hafidomio_s_application2/presentation/splash_screen/splash_screen.dart';
 import 'package:hafidomio_s_application2/presentation/sound_list_screen/sound_list_screen.dart';
 import 'package:hafidomio_s_application2/presentation/lempuyangan_screen/lempuyangan_screen.dart';
 import 'package:hafidomio_s_application2/presentation/connect_screen/connect_screen.dart';
@@ -18,13 +18,13 @@ import 'package:hafidomio_s_application2/presentation/bluetooth_screen/bluetooth
 import 'package:hafidomio_s_application2/presentation/onboarding_one_screen/onboarding_one_screen.dart';
 import 'package:hafidomio_s_application2/presentation/onboarding_three_screen/onboarding_three_screen.dart';
 import 'package:hafidomio_s_application2/presentation/navigation_screen/navigation_screen.dart';
-import 'package:hafidomio_s_application2/presentation/name_screen/name_screen.dart';
+// import 'package:hafidomio_s_application2/presentation/name_screen/name_screen.dart';
 import 'package:hafidomio_s_application2/presentation/connecting_screen/connecting_screen.dart';
 import 'package:hafidomio_s_application2/presentation/location_screen/location_screen.dart';
 import 'package:hafidomio_s_application2/presentation/personal_screen/personal_screen.dart';
 import 'package:hafidomio_s_application2/presentation/end_screen/end_screen.dart';
 import 'package:hafidomio_s_application2/presentation/welcome_signup_screen/welcome_signup_screen.dart';
-import 'package:hafidomio_s_application2/presentation/name_one_screen/name_one_screen.dart';
+// import 'package:hafidomio_s_application2/presentation/name_one_screen/name_one_screen.dart';
 import 'package:hafidomio_s_application2/presentation/searching_screen/searching_screen.dart';
 import 'package:hafidomio_s_application2/presentation/onboarding_two_screen/onboarding_two_screen.dart';
 import 'package:hafidomio_s_application2/presentation/level_hear_screen/level_hear_screen.dart';

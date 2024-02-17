@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 // import 'package:flutter/scheduler.dart';
-import 'package:hafidomio_s_application2/backend/services/auth_gate.dart';
+// import 'package:hafidomio_s_application2/backend/services/auth_gate.dart';
 import 'core/app_export.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:flutter/material.dart';

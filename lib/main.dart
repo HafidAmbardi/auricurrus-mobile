@@ -37,33 +37,33 @@ class MyApp extends StatefulWidget {
   State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const AuthChecker(),
-    );
-  }
-}
-
-// class MyApp extends StatelessWidget {
+// class _MyAppState extends State<MyApp> {
 //   @override
 //   Widget build(BuildContext context) {
-//     return Sizer(
-//       builder: (context, orientation, deviceType) {
-//         return MaterialApp(
-//           theme: theme,
-//           title: 'hafidomio_s_application2',
-//           debugShowCheckedModeBanner: false,
-//           initialRoute: AppRoutes.gateScreen,
-//           routes: AppRoutes.routes,
-//         );
-//       },
+//     return MaterialApp(
+//       title: 'Flutter Demo',
+//       theme: ThemeData(
+//         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+//         useMaterial3: true,
+//       ),
+//       home: const AuthChecker(),
 //     );
 //   }
 // }
+
+class _MyAppState extends State<MyApp> {
+  @override
+  Widget build(BuildContext context) {
+    return Sizer(
+      builder: (context, orientation, deviceType) {
+        return MaterialApp(
+          theme: theme,
+          title: 'hafidomio_s_application2',
+          debugShowCheckedModeBanner: false,
+          initialRoute: AppRoutes.login,
+          routes: AppRoutes.routes,
+        );
+      },
+    );
+  }
+}

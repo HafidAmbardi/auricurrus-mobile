@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hafidomio_s_application2/backend/services/auth_gate.dart';
 import 'package:hafidomio_s_application2/presentation/paired_screen/paired_screen.dart';
 import 'package:hafidomio_s_application2/presentation/dashboard_container_screen/dashboard_container_screen.dart';
 import 'package:hafidomio_s_application2/presentation/trip_lis_screen/trip_lis_screen.dart';
@@ -90,13 +91,15 @@ class AppRoutes {
 
   static const String appNavigationScreen = '/app_navigation_screen';
 
+  static const String login = '/login';
+
   static Map<String, WidgetBuilder> routes = {
     pairedScreen: (context) => PairedScreen(),
     dashboardContainerScreen: (context) => DashboardContainerScreen(),
     tripLisScreen: (context) => TripLisScreen(),
     nameFilledScreen: (context) => NameFilledScreen(),
     gateScreen: (context) => GateScreen(),
-    splashScreen: (context) => SplashScreen(),
+    // splashScreen: (context) => SplashScreen(),
     soundListScreen: (context) => SoundListScreen(),
     lempuyanganScreen: (context) => LempuyanganScreen(),
     connectScreen: (context) => ConnectScreen(),
@@ -119,6 +122,7 @@ class AppRoutes {
     searchingScreen: (context) => SearchingScreen(),
     onboardingTwoScreen: (context) => OnboardingTwoScreen(),
     levelHearScreen: (context) => LevelHearScreen(),
-    appNavigationScreen: (context) => AppNavigationScreen()
+    appNavigationScreen: (context) => AppNavigationScreen(),
+    login: (context) => AuthChecker()
   };
 }

@@ -35,8 +35,8 @@ class AuthRepository {
         dbUser user = dbUser(
           name: displayName ?? 'null',
           email: email ?? 'null',
-          hearingLossLevelLeft: 0,
-          hearingLossLevelRight: 0,
+          hearingLossLevelLeft: '',
+          hearingLossLevelRight: '',
           eventsHappened: 0,
           mileage: 0,
           tripTime: 0,

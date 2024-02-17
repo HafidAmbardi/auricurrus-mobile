@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hafidomio_s_application2/backend/model/user.dart';
 import 'package:hafidomio_s_application2/core/app_export.dart';
 
 class PersonalScreen extends StatelessWidget {
@@ -9,8 +10,17 @@ class PersonalScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Map<String, dynamic> arguments =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+
+    // Access the dbUser and id
+    dbUser? user = arguments['user'];
+    String? id = arguments['id'];
+
+    debugPrint("user in level hear screen " + user!.name);
+
     return GestureDetector(
-      onTap: () => onTapContinue(context),
+      onTap: () => onTapContinue(context, user, id),
       child: SafeArea(
         child: Scaffold(
           backgroundColor: appTheme.indigoA70001,
@@ -56,7 +66,11 @@ class PersonalScreen extends StatelessWidget {
     );
   }
 
-  onTapContinue(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.nameFilledScreen);
+  onTapContinue(BuildContext context, dbUser? user, String? id) {
+    Navigator.pushNamed(
+      context,
+      AppRoutes.nameFilledScreen,
+      arguments: {'user': user, 'id': id},
+    );
   }
 }

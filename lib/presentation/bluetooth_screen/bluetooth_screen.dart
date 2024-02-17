@@ -497,13 +497,14 @@ class BluetoothScreen extends StatelessWidget {
             }),
         actions: [
           AppbarSubtitleTwo(
-              text: "Skip", margin: EdgeInsets.fromLTRB(25.h, 17.v, 25.h, 16.v))
+              text: "Skip", margin: EdgeInsets.fromLTRB(25.h, 17.v, 25.h, 16.v)),
         ]);
   }
 
   /// Navigates back to the previous screen.
   onTapArrowLeft(BuildContext context) {
-    Navigator.pop(context);
+    // Navigator.pop(context);
+    Navigator.pushNamed(context, AppRoutes.dashboardContainerScreen);
   }
 
   /// Navigates to the searchingScreen when the action is triggered.

@@ -3,8 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class dbUser {
   String name;
   String email;
-  int hearingLossLevelLeft;
-  int hearingLossLevelRight;
+  String hearingLossLevelLeft;
+  String hearingLossLevelRight;
   int eventsHappened;
   int mileage;
   int tripTime;
@@ -29,8 +29,8 @@ class dbUser {
       : this(
           name: json['name'] as String,
           email: json['email'] as String,
-          hearingLossLevelLeft: json['hearingLossLevelLeft'] as int,
-          hearingLossLevelRight: json['hearingLossLevelRight'] as int,
+          hearingLossLevelLeft: json['hearingLossLevelLeft'] as String,
+          hearingLossLevelRight: json['hearingLossLevelRight'] as String,
           eventsHappened: json['eventsHappened'] as int,
           mileage: json['mileage'] as int,
           tripTime: json['tripTime'] as int,
@@ -42,8 +42,8 @@ class dbUser {
   dbUser copyWith({
     String? name,
     String? email,
-    int? hearingLossLevelLeft,
-    int? hearingLossLevelRight,
+    String? hearingLossLevelLeft,
+    String? hearingLossLevelRight,
     int? eventsHappened,
     int? mileage,
     int? tripTime,

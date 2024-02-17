@@ -79,4 +79,31 @@ class dbUser {
       'updatedOn': updatedOn,
     };
   }
+
+  dynamic operator [](String key) {
+    switch (key) {
+      case 'name':
+        return name;
+      case 'email':
+        return email;
+      case 'hearingLossLevelLeft':
+        return hearingLossLevelLeft;
+      case 'hearingLossLevelRight':
+        return hearingLossLevelRight;
+      case 'eventsHappened':
+        return eventsHappened;
+      case 'mileage':
+        return mileage;
+      case 'tripTime':
+        return tripTime;
+      case 'darkMode':
+        return darkMode;
+      case 'createdOn':
+        return createdOn;
+      case 'updatedOn':
+        return updatedOn;
+      default:
+        throw ArgumentError('Invalid key: $key');
+    }
+  }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hafidomio_s_application2/core/app_export.dart';
+import 'package:hafidomio_s_application2/presentation/personal_screen/personal_screen.dart';
 import 'package:hafidomio_s_application2/widgets/custom_elevated_button.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -52,5 +53,6 @@ class WelcomeSignupScreen extends StatelessWidget {
   /// Navigates to the personalScreen when the action is triggered.
   onTapContinue(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.personalScreen);
+    // Navigator.pushNamed(context, PersonalScreen());
   }
 }

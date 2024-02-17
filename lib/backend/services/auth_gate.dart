@@ -4,6 +4,7 @@ import 'package:hafidomio_s_application2/backend/pages/login_page.dart';
 import 'package:hafidomio_s_application2/backend/providers/auth_provider.dart';
 import 'package:hafidomio_s_application2/core/app_export.dart';
 import 'package:hafidomio_s_application2/presentation/gate_screen/gate_screen.dart';
+import 'package:hafidomio_s_application2/presentation/name_filled_screen/name_filled_screen.dart';
 import 'package:hafidomio_s_application2/presentation/welcome_signup_screen/welcome_signup_screen.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -17,7 +18,7 @@ class AuthChecker extends ConsumerWidget {
 
     return authState.when(
         data: (user) {
-          if (user != null) return WelcomeSignupScreen();
+          if (user != null) return NameFilledScreen();
           return LoginPage();
         },
         loading: () => const SplashScreen(),

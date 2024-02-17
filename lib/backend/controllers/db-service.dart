@@ -10,7 +10,7 @@ class dbService {
   dbService() {
     _userRef = _firestore.collection(user_Collection_Ref).withConverter<dbUser>(
         fromFirestore: (snapshots, _) => dbUser.fromJson(
-              snapshots.data()!,
+              snapshots.data() as Map<String, dynamic>,
             ),
         toFirestore: (user, _) => user.toJson());
   }
@@ -20,23 +20,22 @@ class dbService {
     return _userRef.snapshots();
   }
 
-  Future<dbUser?> getUserByEmail(String? email) async {
-  try {
-    QuerySnapshot querySnapshot = await _userRef.where('email', isEqualTo: email).get();
-    if (querySnapshot.docs.isNotEmpty) {
-      // Use the fromJson method from your dbUser class to convert the data
-      // return dbUser.fromJson(querySnapshot.docs.first.data());
-      Map<String, dynamic> userData = querySnapshot.docs.first.data() as Map<String, dynamic>;
-      return dbUser.fromJson(userData);
-    } else {
-      return null;
-    }
-  } catch (e) {
-    // Handle any potential errors
-    print("Error fetching user by email: $e");
-    return null;
-  }
-}
+//  Future<dbUser?> getUserByEmail(String email) async {
+//     try {
+//       var query = await _userRef.where('email', isEqualTo: email).get();
+
+//       if (query.docs.isNotEmpty) {
+//         // Assuming there should be only one user with a given email
+//         var userData = query.docs.first.data() as Map<String, dynamic>;
+//         return dbUser.fromJson(userData);
+//       } else {
+//         // Return null if no user is found with the given email
+//         return null;
+//       }
+//     } catch (e) {
+//       rethrow;
+//     }
+//   }
 
   void addUser(dbUser user) async {
     _userRef.add(user);

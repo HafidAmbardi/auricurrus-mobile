@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hafidomio_s_application2/core/app_export.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CustomSearchView extends StatelessWidget {
   CustomSearchView({
@@ -105,8 +106,8 @@ class CustomSearchView extends StatelessWidget {
         prefixIcon: prefix ??
             Container(
               margin: EdgeInsets.fromLTRB(21.h, 22.v, 29.h, 23.v),
-              child: CustomImageView(
-                imagePath: ImageConstant.imgSearchPrimarycontainer,
+              child: SvgPicture.asset(
+                ImageConstant.imgSearchPrimarycontainer,
                 height: 30.adaptSize,
                 width: 30.adaptSize,
               ),
@@ -118,8 +119,8 @@ class CustomSearchView extends StatelessWidget {
         suffixIcon: suffix ??
             Container(
               margin: EdgeInsets.fromLTRB(30.h, 22.v, 19.h, 23.v),
-              child: CustomImageView(
-                imagePath: ImageConstant.imgCloseOnerror,
+              child: SvgPicture.asset(
+                ImageConstant.imgCloseOnerror,
                 height: 30.adaptSize,
                 width: 30.adaptSize,
               ),

@@ -16,7 +16,9 @@ class LocationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MapPage();
+    return MapPage(
+      showPlacesApiGoogleMapSearch: true,
+    );
   }
 
   /// Section Widget

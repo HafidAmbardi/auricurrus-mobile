@@ -4,10 +4,12 @@ import 'package:hafidomio_s_application2/presentation/dashboard_page/dashboard_p
 import 'package:hafidomio_s_application2/presentation/lempuyangan_screen/lempuyangan_screen.dart';
 import 'package:hafidomio_s_application2/presentation/loading_drive_screen/loading_drive_screen.dart';
 import 'package:hafidomio_s_application2/presentation/location_screen/location_screen.dart';
+import 'package:hafidomio_s_application2/presentation/profile_screen/profile_screen.dart';
 import 'package:hafidomio_s_application2/presentation/search_screen/search_screen.dart';
 import 'package:hafidomio_s_application2/widgets/custom_bottom_app_bar.dart';
 import 'package:hafidomio_s_application2/widgets/custom_floating_button.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hafidomio_s_application2/widgets/custom_search_view.dart';
 
 // ignore_for_file: must_be_immutable
 class DashboardContainerScreen extends StatelessWidget {
@@ -88,7 +90,7 @@ class DashboardContainerScreen extends StatelessWidget {
       case BottomBarEnum.Dashboard:
         return AppRoutes.dashboardPage;
       case BottomBarEnum.Profile:
-        return "/";
+        return AppRoutes.profileScreen;
       default:
         return "/";
     }
@@ -100,7 +102,9 @@ class DashboardContainerScreen extends StatelessWidget {
       case AppRoutes.dashboardPage:
         return DashboardPage();
       case AppRoutes.locationScreen:
-        return SearchScreen();
+        return LocationScreen();
+      case AppRoutes.profileScreen:
+        return ProfileScreen();
       default:
         return DefaultWidget();
     }

@@ -8,6 +8,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MapPage extends ConsumerStatefulWidget {
   final bool showPlacesApiGoogleMapSearch;
@@ -85,6 +86,34 @@ class _MapPageState extends ConsumerState<MapPage> {
           widget.showPlacesApiGoogleMapSearch
               ? PlacesApiGoogleMapSearch()
               : Container(),
+          Positioned(
+              bottom: 10,
+              right: 10,
+              child: Container(
+                width: 50,
+                height: 50,
+                decoration:
+                    BoxDecoration(shape: BoxShape.circle, color: Colors.blue),
+                child: Center(
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.navigation_outlined,
+                      color: Colors.white,
+                    ),
+                    onPressed: () async {
+                      if (_currentP != null && destination != null) {
+                        String googleMapsUrl =
+                            'google.navigation:q=${destination.latitude},${destination.longitude}&key=AIzaSyDo99rpQy1IQ8Yr5ExAr-6suebK4rPx8PY';
+                        if (await canLaunchUrl(Uri.parse(googleMapsUrl))) {
+                          await launchUrl(Uri.parse(googleMapsUrl));
+                        } else {
+                          throw 'Could not launch $googleMapsUrl';
+                        }
+                      }
+                    },
+                  ),
+                ),
+              ))
         ],
       ),
     );

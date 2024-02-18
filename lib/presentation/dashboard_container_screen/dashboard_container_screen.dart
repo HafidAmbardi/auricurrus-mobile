@@ -24,16 +24,10 @@ class DashboardContainerScreen extends StatelessWidget {
           extendBody: true,
           extendBodyBehindAppBar: true,
           body: Container(
+              //transparent color
+              color: Colors.transparent,
               width: SizeUtils.width,
               height: SizeUtils.height,
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment(0.03, 0.25),
-                      end: Alignment(0.97, 0.83),
-                      colors: [
-                    appTheme.indigoA70001,
-                    theme.colorScheme.primary
-                  ])),
               child: Navigator(
                   key: navigatorKey,
                   initialRoute: AppRoutes.dashboardPage,

@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
           theme: theme,
           title: 'hafidomio_s_application2',
           debugShowCheckedModeBanner: false,
-          initialRoute: AppRoutes.dashboardContainerScreen,
+          initialRoute: AppRoutes.appNavigationScreen,
           routes: AppRoutes.routes,
         );
       },

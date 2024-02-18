@@ -17,7 +17,7 @@ class PersonalScreen extends StatelessWidget {
     dbUser? user = arguments['user'];
     String? id = arguments['id'];
 
-    debugPrint("user in level hear screen " + user!.name);
+    debugPrint("user in personal screen " + user!.name);
 
     return GestureDetector(
       onTap: () => onTapContinue(context, user, id),

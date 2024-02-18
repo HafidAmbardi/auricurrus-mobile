@@ -83,7 +83,7 @@ class LevelHearScreen extends HookConsumerWidget {
                       decoration:
                           CustomButtonStyles.gradientIndigoAToPrimaryDecoration,
                       onPressed: () {
-                        onTapContinue(context);
+                        onTapContinue(context, user, id);
                       }),
                   SizedBox(height: 5.v)
                 ]))));
@@ -196,7 +196,8 @@ class LevelHearScreen extends HookConsumerWidget {
   }
 
   /// Navigates to the bluetoothScreen when the action is triggered.
-  onTapContinue(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.bluetoothScreen);
+  onTapContinue(BuildContext context, dbUser? user, String? id) {
+    Navigator.pushNamed(context, AppRoutes.bluetoothScreen,
+        arguments: {'user': user, 'id': id});
   }
 }

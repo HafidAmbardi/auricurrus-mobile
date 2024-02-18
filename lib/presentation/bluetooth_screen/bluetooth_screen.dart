@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as fs;
+import 'package:hafidomio_s_application2/backend/model/user.dart';
 import 'package:hafidomio_s_application2/core/app_export.dart';
 import 'package:hafidomio_s_application2/widgets/app_bar/appbar_leading_iconbutton.dart';
 import 'package:hafidomio_s_application2/widgets/app_bar/appbar_subtitle_two.dart';
@@ -12,9 +13,18 @@ class BluetoothScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Map<String, dynamic> arguments =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+
+    // Access the dbUser and id
+    dbUser? user = arguments['user'];
+    String? id = arguments['id'];
+
+    debugPrint("user in bluetooth screen " + user!.name);
+
     return SafeArea(
         child: Scaffold(
-            appBar: _buildAppBar(context),
+            appBar: _buildAppBar(context, user, id),
             body: Container(
                 width: double.maxFinite,
                 padding: EdgeInsets.symmetric(horizontal: 25.h, vertical: 10.v),
@@ -486,25 +496,27 @@ class BluetoothScreen extends StatelessWidget {
   }
 
   /// Section Widget
-  PreferredSizeWidget _buildAppBar(BuildContext context) {
+  PreferredSizeWidget _buildAppBar(BuildContext context, dbUser? user, String? id) {
     return CustomAppBar(
         leadingWidth: 63.h,
         leading: AppbarLeadingIconbutton(
             imagePath: ImageConstant.imgArrowLeftPrimarycontainer,
             margin: EdgeInsets.only(left: 22.h, top: 7.v, bottom: 7.v),
             onTap: () {
-              onTapArrowLeft(context);
+              onTapArrowLeft(context, user, id);
             }),
         actions: [
           AppbarSubtitleTwo(
-              text: "Skip", margin: EdgeInsets.fromLTRB(25.h, 17.v, 25.h, 16.v)),
+              text: "Skip",
+              margin: EdgeInsets.fromLTRB(25.h, 17.v, 25.h, 16.v)),
         ]);
   }
 
   /// Navigates back to the previous screen.
-  onTapArrowLeft(BuildContext context) {
+  onTapArrowLeft(BuildContext context, dbUser? user, String? id) {
     // Navigator.pop(context);
-    Navigator.pushNamed(context, AppRoutes.dashboardContainerScreen);
+    Navigator.pushNamed(context, AppRoutes.dashboardContainerScreen,
+        arguments: {'user': user, 'id': id});
   }
 
   /// Navigates to the searchingScreen when the action is triggered.

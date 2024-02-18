@@ -17,9 +17,6 @@ class NameFilledScreen extends HookConsumerWidget {
   NameFilledScreen({Key? key}) : super(key: key);
 
   TextEditingController nameController = TextEditingController();
-          dbUser? user;
-        String? id;
-
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -42,7 +39,7 @@ class NameFilledScreen extends HookConsumerWidget {
     dbUser? user = arguments['user'];
     String? id = arguments['id'];
 
-    debugPrint("user in level hear screen " + user!.name);
+    debugPrint("user in name filled screen " + user!.name);
 
     return SafeArea(
           child: Scaffold(

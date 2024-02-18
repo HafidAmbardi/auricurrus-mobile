@@ -3,6 +3,7 @@ import 'package:hafidomio_s_application2/core/app_export.dart';
 import 'package:hafidomio_s_application2/presentation/dashboard_page/dashboard_page.dart';
 import 'package:hafidomio_s_application2/widgets/custom_bottom_app_bar.dart';
 import 'package:hafidomio_s_application2/widgets/custom_icon_button.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class ProfileScreen extends StatelessWidget {
   ProfileScreen({Key? key})
@@ -65,10 +66,12 @@ class ProfileScreen extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            CustomImageView(
-                              imagePath: ImageConstant.imgLinkedin,
-                              height: 22.v,
-                              width: 18.h,
+                            Container(
+                              child: SvgPicture.asset(
+                                ImageConstant.imgLinkedin,
+                                height: 22.v,
+                                width: 18.h,
+                              ),
                               margin: EdgeInsets.only(
                                 left: 4.h,
                                 top: 12.v,
@@ -99,8 +102,8 @@ class ProfileScreen extends StatelessWidget {
                                 width: 42.adaptSize,
                                 padding: EdgeInsets.all(10.h),
                                 decoration: IconButtonStyleHelper.fillIndigoA,
-                                child: CustomImageView(
-                                  imagePath: ImageConstant.imgArrowRight,
+                                child: SvgPicture.asset(
+                                  ImageConstant.imgArrowRight,
                                 ),
                               ),
                             ),
@@ -119,10 +122,12 @@ class ProfileScreen extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            CustomImageView(
-                              imagePath: ImageConstant.imgBel,
-                              height: 21.v,
-                              width: 22.h,
+                            Container(
+                              child: SvgPicture.asset(
+                                ImageConstant.imgBel,
+                                height: 21.v,
+                                width: 22.h,
+                              ),
                               margin: EdgeInsets.only(
                                 left: 4.h,
                                 top: 12.v,
@@ -149,8 +154,8 @@ class ProfileScreen extends StatelessWidget {
                                 width: 42.adaptSize,
                                 padding: EdgeInsets.all(10.h),
                                 decoration: IconButtonStyleHelper.fillIndigoA,
-                                child: CustomImageView(
-                                  imagePath: ImageConstant.imgArrowRight,
+                                child: SvgPicture.asset(
+                                  ImageConstant.imgArrowRight,
                                 ),
                               ),
                             ),
@@ -169,10 +174,12 @@ class ProfileScreen extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            CustomImageView(
-                              imagePath: ImageConstant.imgLockPrimarycontainer,
-                              height: 22.adaptSize,
-                              width: 22.adaptSize,
+                            Container(
+                              child: SvgPicture.asset(
+                                ImageConstant.imgLockPrimarycontainer,
+                                height: 22.adaptSize,
+                                width: 22.adaptSize,
+                              ),
                               margin: EdgeInsets.only(
                                 top: 12.v,
                                 bottom: 11.v,
@@ -201,8 +208,8 @@ class ProfileScreen extends StatelessWidget {
                               decoration: AppDecoration.fillIndigoA.copyWith(
                                 borderRadius: BorderRadiusStyle.roundedBorder8,
                               ),
-                              child: CustomImageView(
-                                imagePath: ImageConstant.imgArrowRight,
+                              child: SvgPicture.asset(
+                                ImageConstant.imgArrowRight,
                                 height: 22.adaptSize,
                                 width: 22.adaptSize,
                                 alignment: Alignment.center,
@@ -223,10 +230,12 @@ class ProfileScreen extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            CustomImageView(
-                              imagePath: ImageConstant.imgSearch,
-                              height: 22.adaptSize,
-                              width: 22.adaptSize,
+                            Container(
+                              child: SvgPicture.asset(
+                                ImageConstant.imgSearch,
+                                height: 22.adaptSize,
+                                width: 22.adaptSize,
+                              ),
                               margin: EdgeInsets.only(
                                 left: 4.h,
                                 top: 12.v,
@@ -254,8 +263,8 @@ class ProfileScreen extends StatelessWidget {
                               decoration: AppDecoration.fillIndigoA.copyWith(
                                 borderRadius: BorderRadiusStyle.roundedBorder8,
                               ),
-                              child: CustomImageView(
-                                imagePath: ImageConstant.imgArrowRight,
+                              child: SvgPicture.asset(
+                                ImageConstant.imgArrowRight,
                                 height: 22.adaptSize,
                                 width: 22.adaptSize,
                                 alignment: Alignment.center,
@@ -317,8 +326,8 @@ class ProfileScreen extends StatelessWidget {
                                 width: 42.adaptSize,
                                 padding: EdgeInsets.all(10.h),
                                 decoration: IconButtonStyleHelper.fillIndigoA,
-                                child: CustomImageView(
-                                  imagePath: ImageConstant.imgArrowRight,
+                                child: SvgPicture.asset(
+                                  ImageConstant.imgArrowRight,
                                 ),
                               ),
                             ),
@@ -346,10 +355,12 @@ class ProfileScreen extends StatelessWidget {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CustomImageView(
-                        imagePath: ImageConstant.imgShape,
-                        height: 4.v,
-                        width: 7.h,
+                      Container(
+                        child: SvgPicture.asset(
+                          ImageConstant.imgShape,
+                          height: 4.v,
+                          width: 7.h,
+                        ),
                         margin: EdgeInsets.only(
                           top: 11.v,
                           bottom: 7.v,
@@ -365,14 +376,14 @@ class ProfileScreen extends StatelessWidget {
                         child: Stack(
                           alignment: Alignment.center,
                           children: [
-                            CustomImageView(
-                              imagePath: ImageConstant.imgShape,
+                            SvgPicture.asset(
+                              ImageConstant.imgShape,
                               height: 9.v,
                               width: 3.h,
                               alignment: Alignment.bottomCenter,
                             ),
-                            CustomImageView(
-                              imagePath: ImageConstant.imgSettingsIndigoA700,
+                            SvgPicture.asset(
+                              ImageConstant.imgSettingsIndigoA700,
                               height: 13.v,
                               width: 9.h,
                               alignment: Alignment.center,
@@ -408,7 +419,6 @@ class ProfileScreen extends StatelessWidget {
             ],
           ),
         ),
-        bottomNavigationBar: _buildBottomBarSection(context),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
     );
@@ -430,7 +440,7 @@ class ProfileScreen extends StatelessWidget {
       case BottomBarEnum.Dashboard:
         return AppRoutes.dashboardPage;
       case BottomBarEnum.Profile:
-        return "/";
+        return AppRoutes.profileScreen;
       default:
         return "/";
     }

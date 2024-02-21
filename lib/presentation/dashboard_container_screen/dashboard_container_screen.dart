@@ -16,6 +16,7 @@ class DashboardContainerScreen extends StatelessWidget {
   DashboardContainerScreen({Key? key}) : super(key: key);
 
   GlobalKey<NavigatorState> navigatorKey = GlobalKey();
+  BuildContext? overlayContext;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +34,7 @@ class DashboardContainerScreen extends StatelessWidget {
                   initialRoute: AppRoutes.dashboardPage,
                   onGenerateRoute: (routeSetting) => PageRouteBuilder(
                       pageBuilder: (ctx, ani, ani1) =>
-                          getCurrentPage(routeSetting.name!),
+                          getCurrentPage(routeSetting.name!, overlayContext),
                       transitionDuration: Duration(seconds: 0)))),
           bottomNavigationBar: _buildNavbarsFiverdActive(context),
           floatingActionButtonLocation:
@@ -49,6 +50,7 @@ class DashboardContainerScreen extends StatelessWidget {
   // }
 
   Widget _buildNavbarsFiverdActive(BuildContext context) {
+    overlayContext = context;
     return SingleChildScrollView(
       child: Stack(
         alignment: Alignment.bottomCenter,
@@ -91,12 +93,12 @@ class DashboardContainerScreen extends StatelessWidget {
   }
 
   ///Handling page based on route
-  Widget getCurrentPage(String currentRoute) {
+  Widget getCurrentPage(String currentRoute, BuildContext? context) {
     switch (currentRoute) {
       case AppRoutes.dashboardPage:
         return DashboardPage();
       case AppRoutes.locationScreen:
-        return LocationScreen();
+        return LocationScreen(overlayContext: overlayContext);
       case AppRoutes.profileScreen:
         return ProfileScreen();
       default:

@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key, required this.title});
-
-  final String title;
+  const ChatScreen({super.key});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
 
+  static final GlobalKey<_ChatScreenState> chatScreenStateKey =
+      GlobalKey<_ChatScreenState>();
+
   Widget build(BuildContext context) {
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -18,6 +20,7 @@ class ChatScreen extends StatefulWidget {
       ),
     );
   }
+
 }
 
 class _ChatScreenState extends State<ChatScreen> {
@@ -41,7 +44,7 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     super.initState();
     connectServer();
-    receiveMessage();
+    // receiveMessage();
     debugPrint('hello');
   }
 
@@ -55,7 +58,7 @@ class _ChatScreenState extends State<ChatScreen> {
     });
   }
 
-  void sendMessage() {
+  void sendMessage([String? s]) {
     String message = messageController.text.trim();
     if (message.isNotEmpty) {
       socket.emit('chat_message', message);
@@ -63,14 +66,14 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  void receiveMessage() {
-    socket.on('response', (data) {
-      setState(() {
-        messages.add(data['dir']);
-      });
-      debugPrint(data['dir']);
-    });
-  }
+  // void receiveMessage() {
+  //   socket.on('response', (data) {
+  //     setState(() {
+  //       messages.add(data['dir']);
+  //     });
+  //     debugPrint(data['dir']);
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {

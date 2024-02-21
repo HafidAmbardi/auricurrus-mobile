@@ -8,11 +8,19 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:hafidomio_s_application2/widgets/custom_elevated_button.dart';
+import 'package:hafidomio_s_application2/core/app_export.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class MapPage extends ConsumerStatefulWidget {
   final bool showPlacesApiGoogleMapSearch;
+  final BuildContext? overlayContext;
 
-  const MapPage({this.showPlacesApiGoogleMapSearch = true, super.key});
+  const MapPage(
+      {this.overlayContext,
+      this.showPlacesApiGoogleMapSearch = true,
+      super.key});
 
   @override
   ConsumerState<MapPage> createState() => _MapPageState();
@@ -20,7 +28,6 @@ class MapPage extends ConsumerStatefulWidget {
 
 class _MapPageState extends ConsumerState<MapPage> {
   Location _locationController = new Location();
-
   final Completer<GoogleMapController> _mapController =
       Completer<GoogleMapController>();
 
@@ -28,6 +35,80 @@ class _MapPageState extends ConsumerState<MapPage> {
   LatLng? _currentP;
 
   Map<PolylineId, Polyline> polylines = {};
+
+  void showOverlay(BuildContext context, LatLng destination) {
+    OverlayEntry overlayEntry = OverlayEntry(
+      builder: (context) => Positioned(
+        bottom: 0,
+        child: Container(
+          child: Align(
+            // custom alignment
+            alignment: Alignment(0, 1),
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              padding: EdgeInsets.symmetric(
+                horizontal: 25.h,
+                vertical: 8.v,
+              ),
+              decoration: AppDecoration.outlineOnPrimaryContainer,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 1.h),
+                    child: Text(
+                      "6 min (1.4 km)",
+                      style: CustomTextStyles.headlineSmallOnError,
+                    ),
+                  ),
+                  SizedBox(height: 2.v),
+                  Padding(
+                    padding: EdgeInsets.only(left: 1.h),
+                    child: Text(
+                      "Rute tercepat saat ini sesuai kondisi lalu lintas",
+                      style: CustomTextStyles.bodyMediumOnError_1,
+                    ),
+                  ),
+                  SizedBox(height: 12.v),
+                  CustomElevatedButton(
+                    text: "Start",
+                    margin: EdgeInsets.only(left: 1.h),
+                    leftIcon: Container(
+                      margin: EdgeInsets.only(right: 10.h),
+                      child: SvgPicture.asset(
+                        ImageConstant.imgSave,
+                        height: 30.adaptSize,
+                        width: 30.adaptSize,
+                      ),
+                    ),
+                    buttonStyle: CustomButtonStyles.none,
+                    decoration:
+                        CustomButtonStyles.gradientIndigoAToPrimaryDecoration,
+                    onPressed: () async {
+                      if (_currentP != null && destination != null) {
+                        String googleMapsUrl =
+                            'google.navigation:q=${destination.latitude},${destination.longitude}&key=AIzaSyDFnxsNsRe9whZ2_nAVmV4GnaEty-BUogo';
+                        if (await canLaunchUrl(Uri.parse(googleMapsUrl))) {
+                          await launchUrl(Uri.parse(googleMapsUrl));
+                        } else {
+                          throw 'Could not launch $googleMapsUrl';
+                        }
+                      }
+                    },
+                  ),
+                  SizedBox(height: 21.v),
+                ],
+              ),
+            ),
+          ),
+          // ... your start button code here
+        ),
+      ),
+    );
+
+    Overlay.of(widget.overlayContext ?? context)?.insert(overlayEntry);
+  }
 
   Set<Marker> markers = {};
   @override
@@ -38,6 +119,12 @@ class _MapPageState extends ConsumerState<MapPage> {
                 generatePolyLineFromPoints(coordinates),
               })
         });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final destination = ref.watch(destinationStateProvider);
+      if (destination != null) {
+        showOverlay(context, destination);
+      }
+    });
   }
 
   @override
@@ -85,6 +172,36 @@ class _MapPageState extends ConsumerState<MapPage> {
           widget.showPlacesApiGoogleMapSearch
               ? PlacesApiGoogleMapSearch()
               : Container(),
+          // Start button
+
+          Positioned(
+              bottom: 10,
+              right: 10,
+              child: Container(
+                width: 50,
+                height: 50,
+                decoration:
+                    BoxDecoration(shape: BoxShape.circle, color: Colors.blue),
+                child: Center(
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.navigation_outlined,
+                      color: Colors.white,
+                    ),
+                    onPressed: () async {
+                      if (_currentP != null && destination != null) {
+                        String googleMapsUrl =
+                            'google.navigation:q=${destination.latitude},${destination.longitude}&key=AIzaSyDFnxsNsRe9whZ2_nAVmV4GnaEty-BUogo';
+                        if (await canLaunchUrl(Uri.parse(googleMapsUrl))) {
+                          await launchUrl(Uri.parse(googleMapsUrl));
+                        } else {
+                          throw 'Could not launch $googleMapsUrl';
+                        }
+                      }
+                    },
+                  ),
+                ),
+              ))
         ],
       ),
     );

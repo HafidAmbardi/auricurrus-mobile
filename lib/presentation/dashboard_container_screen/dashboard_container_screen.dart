@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:hafidomio_s_application2/backend/model/user.dart';
 import 'package:hafidomio_s_application2/core/app_export.dart';
@@ -11,15 +13,21 @@ import 'package:hafidomio_s_application2/widgets/custom_bottom_app_bar.dart';
 import 'package:hafidomio_s_application2/widgets/custom_floating_button.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hafidomio_s_application2/widgets/custom_search_view.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 // ignore_for_file: must_be_immutable
 class DashboardContainerScreen extends StatelessWidget {
   DashboardContainerScreen({Key? key}) : super(key: key);
 
   GlobalKey<NavigatorState> navigatorKey = GlobalKey();
+  BuildContext? overlayContext;
 
   @override
   Widget build(BuildContext context) {
+    final IO.Socket socket = IO.io('http://10.0.2.2:3001', <String, dynamic>{
+    'transports': ['websocket'],
+    'autoConnect': true,
+  });
      Map<String, dynamic> arguments =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 
@@ -34,22 +42,16 @@ class DashboardContainerScreen extends StatelessWidget {
           extendBody: true,
           extendBodyBehindAppBar: true,
           body: Container(
+              //transparent color
+              color: Colors.transparent,
               width: SizeUtils.width,
               height: SizeUtils.height,
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment(0.03, 0.25),
-                      end: Alignment(0.97, 0.83),
-                      colors: [
-                    appTheme.indigoA70001,
-                    theme.colorScheme.primary
-                  ])),
               child: Navigator(
                   key: navigatorKey,
                   initialRoute: AppRoutes.dashboardPage,
                   onGenerateRoute: (routeSetting) => PageRouteBuilder(
                       pageBuilder: (ctx, ani, ani1) =>
-                          getCurrentPage(routeSetting.name!, user, id),
+                          getCurrentPage(routeSetting.name!, overlayContext, user, id, socket),
                       transitionDuration: Duration(seconds: 0)))),
           bottomNavigationBar: _buildNavbarsFiverdActive(context),
           floatingActionButtonLocation:
@@ -65,6 +67,7 @@ class DashboardContainerScreen extends StatelessWidget {
   // }
 
   Widget _buildNavbarsFiverdActive(BuildContext context) {
+    overlayContext = context;
     return SingleChildScrollView(
       child: Stack(
         alignment: Alignment.bottomCenter,
@@ -107,12 +110,13 @@ class DashboardContainerScreen extends StatelessWidget {
   }
 
   ///Handling page based on route
-  Widget getCurrentPage(String currentRoute, dbUser? user, String? id) {
+
+  Widget getCurrentPage(String currentRoute, BuildContext? context, dbUser? user, String? id, IO.Socket socket ) {
     switch (currentRoute) {
       case AppRoutes.dashboardPage:
         return DashboardPage(user: user, id: id);
       case AppRoutes.locationScreen:
-        return LocationScreen();
+        return LocationScreen(overlayContext: overlayContext, socket: socket,);
       case AppRoutes.profileScreen:
         return ProfileScreen();
       default:

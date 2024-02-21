@@ -1,11 +1,20 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hafidomio_s_application2/backend/login_controller/login_controller.dart';
+import 'package:hafidomio_s_application2/backend/providers/auth_provider.dart';
 import 'package:hafidomio_s_application2/core/app_export.dart';
 import 'package:hafidomio_s_application2/presentation/dashboard_page/dashboard_page.dart';
 import 'package:hafidomio_s_application2/widgets/custom_bottom_app_bar.dart';
 import 'package:hafidomio_s_application2/widgets/custom_icon_button.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:hafidomio_s_application2/widgets/app_bar/appbar_subtitle_four.dart';
+import 'package:hafidomio_s_application2/widgets/app_bar/appbar_subtitle_one.dart';
+import 'package:hafidomio_s_application2/widgets/app_bar/appbar_title.dart';
+import 'package:hafidomio_s_application2/widgets/app_bar/appbar_title_button.dart';
+import 'package:hafidomio_s_application2/widgets/app_bar/custom_app_bar.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends HookConsumerWidget {
   ProfileScreen({Key? key})
       : super(
           key: key,
@@ -14,412 +23,446 @@ class ProfileScreen extends StatelessWidget {
   GlobalKey<NavigatorState> navigatorKey = GlobalKey();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authState = ref.watch(authStateProvider);
+    final User? authenticatedUser = authState.value;
+
+    String? userEmail = authenticatedUser?.email;
+    String? userUID = authenticatedUser?.uid;
     return SafeArea(
       child: Scaffold(
-        body: SizedBox(
-          height: 1.v,
-          width: double.maxFinite,
-          child: Stack(
-            alignment: Alignment.bottomCenter,
-            children: [
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 26.h,
-                    vertical: 20.v,
-                  ),
-                  decoration: AppDecoration.linear,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Josephine",
-                        style: theme.textTheme.headlineMedium,
-                      ),
-                      SizedBox(height: 29.v),
-                      Text(
-                        "josephine@gmail.com",
-                        style: CustomTextStyles.bodyMediumOnErrorContainer_1,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25.h),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 25.h,
-                          vertical: 14.v,
-                        ),
-                        decoration: AppDecoration.outlineGray.copyWith(
-                          borderRadius: BorderRadiusStyle.roundedBorder8,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              child: SvgPicture.asset(
-                                ImageConstant.imgLinkedin,
-                                height: 22.v,
-                                width: 18.h,
-                              ),
+        backgroundColor: appTheme.indigoA70001,
+        body: Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            CustomAppBar(
+              height: 127.v,
+              title: Container(
+                  height: 84.43.v,
+                  width: 349.h,
+                  margin: EdgeInsets.only(left: 26.h),
+                  child: Stack(children: [
+                    AppbarSubtitleOne(
+                        text: "Good morning,",
+                        margin: EdgeInsets.only(right: 214.h, bottom: 59.v)),
+                    Container(
+                        height: 79.v,
+                        width: 349.h,
+                        margin: EdgeInsets.only(top: 5.v),
+                        child: Stack(alignment: Alignment.center, children: [
+                          AppbarTitle(
+                              text: "Josephine",
                               margin: EdgeInsets.only(
-                                left: 4.h,
-                                top: 12.v,
-                                bottom: 11.v,
-                              ),
-                            ),
-                            Spacer(
-                              flex: 20,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                top: 12.v,
-                                bottom: 10.v,
-                              ),
-                              child: Text(
-                                "Trip list",
-                                style: CustomTextStyles
-                                    .bodyLargePrimaryContainer_1,
-                              ),
-                            ),
-                            Spacer(
-                              flex: 79,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(bottom: 3.v),
-                              child: CustomIconButton(
-                                height: 42.adaptSize,
-                                width: 42.adaptSize,
-                                padding: EdgeInsets.all(10.h),
-                                decoration: IconButtonStyleHelper.fillIndigoA,
-                                child: SvgPicture.asset(
-                                  ImageConstant.imgArrowRight,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 12.v),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 25.h,
-                          vertical: 14.v,
-                        ),
-                        decoration: AppDecoration.outlineGray.copyWith(
-                          borderRadius: BorderRadiusStyle.roundedBorder8,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              child: SvgPicture.asset(
-                                ImageConstant.imgBel,
-                                height: 21.v,
-                                width: 22.h,
-                              ),
+                                  top: 19.v, right: 192.h, bottom: 22.v)),
+                          AppbarSubtitleFour(
+                              text: "Level of hearing loss:",
                               margin: EdgeInsets.only(
-                                left: 4.h,
-                                top: 12.v,
-                                bottom: 11.v,
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                left: 28.h,
-                                top: 10.v,
-                                bottom: 11.v,
-                              ),
-                              child: Text(
-                                "Sound list",
-                                style: CustomTextStyles
-                                    .bodyLargePrimaryContainer_1,
-                              ),
-                            ),
-                            Spacer(),
-                            Padding(
-                              padding: EdgeInsets.only(bottom: 3.v),
-                              child: CustomIconButton(
-                                height: 42.adaptSize,
-                                width: 42.adaptSize,
-                                padding: EdgeInsets.all(10.h),
-                                decoration: IconButtonStyleHelper.fillIndigoA,
-                                child: SvgPicture.asset(
-                                  ImageConstant.imgArrowRight,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 12.v),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 25.h,
-                          vertical: 14.v,
-                        ),
-                        decoration: AppDecoration.outlineGray.copyWith(
-                          borderRadius: BorderRadiusStyle.roundedBorder8,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              child: SvgPicture.asset(
-                                ImageConstant.imgLockPrimarycontainer,
-                                height: 22.adaptSize,
-                                width: 22.adaptSize,
-                              ),
+                                  top: 57.v, right: 215.h, bottom: 3.v)),
+                          AppbarTitleButton(
                               margin: EdgeInsets.only(
-                                top: 12.v,
-                                bottom: 11.v,
-                              ),
+                                  left: 140.h, top: 53.v, right: 79.h)),
+                          Align(
+                              alignment: Alignment.topRight,
+                              child: Container(
+                                  margin: EdgeInsets.only(
+                                      left: 224.h, bottom: 48.v),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 8.h, vertical: 3.v),
+                                  decoration: AppDecoration.outlineBlueGray
+                                      .copyWith(
+                                          borderRadius: BorderRadiusStyle
+                                              .customBorderTL24),
+                                  child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          child: SvgPicture.asset(
+                                            ImageConstant.imgGroup,
+                                          ),
+                                          margin: EdgeInsets.only(top: 3.v),
+                                        ),
+                                        Padding(
+                                            padding: EdgeInsets.only(
+                                                right: 16.h, bottom: 2.v),
+                                            child: RichText(
+                                                text: TextSpan(children: [
+                                                  TextSpan(
+                                                      text: "uri",
+                                                      style: CustomTextStyles
+                                                          .titleMediumff3730d9),
+                                                  TextSpan(
+                                                      text: "currus",
+                                                      style: CustomTextStyles
+                                                          .titleMediumff3730d9)
+                                                ]),
+                                                textAlign: TextAlign.left))
+                                      ])))
+                        ]))
+                  ])),
+            ),
+            Align(
+              alignment: Alignment(0.0, 0.5),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 25.h),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 25.h,
+                        vertical: 14.v,
+                      ),
+                      decoration: AppDecoration.outlineGray.copyWith(
+                        borderRadius: BorderRadiusStyle.roundedBorder8,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            child: SvgPicture.asset(
+                              ImageConstant.imgLinkedin,
+                              height: 22.v,
+                              width: 18.h,
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                left: 28.h,
-                                top: 12.v,
-                                bottom: 10.v,
-                              ),
-                              child: Text(
-                                "Change email address",
-                                style: CustomTextStyles
-                                    .bodyLargePrimaryContainer_1,
-                              ),
+                            margin: EdgeInsets.only(
+                              left: 4.h,
+                              top: 12.v,
+                              bottom: 11.v,
                             ),
-                            Container(
+                          ),
+                          Spacer(
+                            flex: 20,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                              top: 12.v,
+                              bottom: 10.v,
+                            ),
+                            child: Text(
+                              "Trip list",
+                              style:
+                                  CustomTextStyles.bodyLargePrimaryContainer_1,
+                            ),
+                          ),
+                          Spacer(
+                            flex: 79,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 3.v),
+                            child: CustomIconButton(
                               height: 42.adaptSize,
                               width: 42.adaptSize,
-                              margin: EdgeInsets.only(
-                                left: 8.h,
-                                bottom: 3.v,
-                              ),
                               padding: EdgeInsets.all(10.h),
-                              decoration: AppDecoration.fillIndigoA.copyWith(
-                                borderRadius: BorderRadiusStyle.roundedBorder8,
-                              ),
+                              decoration: IconButtonStyleHelper.fillIndigoA,
                               child: SvgPicture.asset(
                                 ImageConstant.imgArrowRight,
-                                height: 22.adaptSize,
-                                width: 22.adaptSize,
-                                alignment: Alignment.center,
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                      SizedBox(height: 12.v),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 25.h,
-                          vertical: 14.v,
-                        ),
-                        decoration: AppDecoration.outlineGray.copyWith(
-                          borderRadius: BorderRadiusStyle.roundedBorder8,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              child: SvgPicture.asset(
-                                ImageConstant.imgSearch,
-                                height: 22.adaptSize,
-                                width: 22.adaptSize,
-                              ),
-                              margin: EdgeInsets.only(
-                                left: 4.h,
-                                top: 12.v,
-                                bottom: 11.v,
-                              ),
+                    ),
+                    SizedBox(height: 12.v),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 25.h,
+                        vertical: 14.v,
+                      ),
+                      decoration: AppDecoration.outlineGray.copyWith(
+                        borderRadius: BorderRadiusStyle.roundedBorder8,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            child: SvgPicture.asset(
+                              ImageConstant.imgBel,
+                              height: 21.v,
+                              width: 22.h,
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                left: 28.h,
-                                top: 12.v,
-                                bottom: 10.v,
-                              ),
-                              child: Text(
-                                "Setting",
-                                style: CustomTextStyles
-                                    .bodyLargePrimaryContainer_1,
-                              ),
+                            margin: EdgeInsets.only(
+                              left: 4.h,
+                              top: 12.v,
+                              bottom: 11.v,
                             ),
-                            Spacer(),
-                            Container(
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                              left: 28.h,
+                              top: 10.v,
+                              bottom: 11.v,
+                            ),
+                            child: Text(
+                              "Sound list",
+                              style:
+                                  CustomTextStyles.bodyLargePrimaryContainer_1,
+                            ),
+                          ),
+                          Spacer(),
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 3.v),
+                            child: CustomIconButton(
                               height: 42.adaptSize,
                               width: 42.adaptSize,
-                              margin: EdgeInsets.only(bottom: 3.v),
                               padding: EdgeInsets.all(10.h),
-                              decoration: AppDecoration.fillIndigoA.copyWith(
-                                borderRadius: BorderRadiusStyle.roundedBorder8,
-                              ),
+                              decoration: IconButtonStyleHelper.fillIndigoA,
                               child: SvgPicture.asset(
                                 ImageConstant.imgArrowRight,
-                                height: 22.adaptSize,
-                                width: 22.adaptSize,
-                                alignment: Alignment.center,
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                      SizedBox(height: 12.v),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 25.h,
-                          vertical: 14.v,
-                        ),
-                        decoration: AppDecoration.outlineGray.copyWith(
-                          borderRadius: BorderRadiusStyle.roundedBorder8,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
+                    ),
+                    SizedBox(height: 12.v),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 25.h,
+                        vertical: 14.v,
+                      ),
+                      decoration: AppDecoration.outlineGray.copyWith(
+                        borderRadius: BorderRadiusStyle.roundedBorder8,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            child: SvgPicture.asset(
+                              ImageConstant.imgLockPrimarycontainer,
+                              height: 22.adaptSize,
                               width: 22.adaptSize,
-                              margin: EdgeInsets.only(
-                                left: 4.h,
-                                top: 12.v,
-                                bottom: 11.v,
-                              ),
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 8.h,
-                                vertical: 1.v,
-                              ),
-                              decoration: AppDecoration.outlinePrimaryContainer
-                                  .copyWith(
-                                borderRadius: BorderRadiusStyle.circleBorder13,
-                              ),
-                              child: Text(
-                                "i",
-                                style:
-                                    CustomTextStyles.titleSmallPrimaryContainer,
-                              ),
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                left: 28.h,
-                                top: 11.v,
-                                bottom: 11.v,
-                              ),
-                              child: Text(
-                                "About Us",
-                                style: CustomTextStyles
-                                    .bodyLargePrimaryContainer_1,
-                              ),
+                            margin: EdgeInsets.only(
+                              top: 12.v,
+                              bottom: 11.v,
                             ),
-                            Spacer(),
-                            Padding(
-                              padding: EdgeInsets.only(bottom: 3.v),
-                              child: CustomIconButton(
-                                height: 42.adaptSize,
-                                width: 42.adaptSize,
-                                padding: EdgeInsets.all(10.h),
-                                decoration: IconButtonStyleHelper.fillIndigoA,
-                                child: SvgPicture.asset(
-                                  ImageConstant.imgArrowRight,
-                                ),
-                              ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                              left: 28.h,
+                              top: 12.v,
+                              bottom: 10.v,
                             ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: Container(
-                  margin: EdgeInsets.only(
-                    left: 250.h,
-                    top: 26.v,
-                  ),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 13.h,
-                    vertical: 3.v,
-                  ),
-                  decoration: AppDecoration.outlineBlueGray.copyWith(
-                    borderRadius: BorderRadiusStyle.circleBorder13,
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        child: SvgPicture.asset(
-                          ImageConstant.imgShape,
-                          height: 4.v,
-                          width: 7.h,
-                        ),
-                        margin: EdgeInsets.only(
-                          top: 11.v,
-                          bottom: 7.v,
-                        ),
-                      ),
-                      Container(
-                        height: 13.v,
-                        width: 9.h,
-                        margin: EdgeInsets.only(
-                          top: 4.v,
-                          bottom: 6.v,
-                        ),
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            SvgPicture.asset(
-                              ImageConstant.imgShape,
-                              height: 9.v,
-                              width: 3.h,
-                              alignment: Alignment.bottomCenter,
+                            child: Text(
+                              "Change email address",
+                              style:
+                                  CustomTextStyles.bodyLargePrimaryContainer_1,
                             ),
-                            SvgPicture.asset(
-                              ImageConstant.imgSettingsIndigoA700,
-                              height: 13.v,
-                              width: 9.h,
+                          ),
+                          Container(
+                            height: 42.adaptSize,
+                            width: 42.adaptSize,
+                            margin: EdgeInsets.only(
+                              left: 8.h,
+                              bottom: 3.v,
+                            ),
+                            padding: EdgeInsets.all(10.h),
+                            decoration: AppDecoration.fillIndigoA.copyWith(
+                              borderRadius: BorderRadiusStyle.roundedBorder8,
+                            ),
+                            child: SvgPicture.asset(
+                              ImageConstant.imgArrowRight,
+                              height: 22.adaptSize,
+                              width: 22.adaptSize,
                               alignment: Alignment.center,
                             ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: 1.h,
-                          bottom: 2.v,
-                        ),
-                        child: RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text: "uri",
-                                style: CustomTextStyles.titleMediumff3730d9,
-                              ),
-                              TextSpan(
-                                text: "currus",
-                                style: CustomTextStyles.titleMediumff3730d9,
-                              ),
-                            ],
                           ),
-                          textAlign: TextAlign.left,
-                        ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                    SizedBox(height: 12.v),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 25.h,
+                        vertical: 14.v,
+                      ),
+                      decoration: AppDecoration.outlineGray.copyWith(
+                        borderRadius: BorderRadiusStyle.roundedBorder8,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            child: SvgPicture.asset(
+                              ImageConstant.imgSearch,
+                              height: 22.adaptSize,
+                              width: 22.adaptSize,
+                            ),
+                            margin: EdgeInsets.only(
+                              left: 4.h,
+                              top: 12.v,
+                              bottom: 11.v,
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                              left: 28.h,
+                              top: 12.v,
+                              bottom: 10.v,
+                            ),
+                            child: Text(
+                              "Setting",
+                              style:
+                                  CustomTextStyles.bodyLargePrimaryContainer_1,
+                            ),
+                          ),
+                          Spacer(),
+                          Container(
+                            height: 42.adaptSize,
+                            width: 42.adaptSize,
+                            margin: EdgeInsets.only(bottom: 3.v),
+                            padding: EdgeInsets.all(10.h),
+                            decoration: AppDecoration.fillIndigoA.copyWith(
+                              borderRadius: BorderRadiusStyle.roundedBorder8,
+                            ),
+                            child: SvgPicture.asset(
+                              ImageConstant.imgArrowRight,
+                              height: 22.adaptSize,
+                              width: 22.adaptSize,
+                              alignment: Alignment.center,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 12.v),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 25.h,
+                        vertical: 14.v,
+                      ),
+                      decoration: AppDecoration.outlineGray.copyWith(
+                        borderRadius: BorderRadiusStyle.roundedBorder8,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 22.adaptSize,
+                            margin: EdgeInsets.only(
+                              left: 4.h,
+                              top: 12.v,
+                              bottom: 11.v,
+                            ),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 8.h,
+                              vertical: 1.v,
+                            ),
+                            decoration:
+                                AppDecoration.outlinePrimaryContainer.copyWith(
+                              borderRadius: BorderRadiusStyle.circleBorder13,
+                            ),
+                            child: Text(
+                              "i",
+                              style:
+                                  CustomTextStyles.titleSmallPrimaryContainer,
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                              left: 28.h,
+                              top: 11.v,
+                              bottom: 11.v,
+                            ),
+                            child: Text(
+                              "About Us",
+                              style:
+                                  CustomTextStyles.bodyLargePrimaryContainer_1,
+                            ),
+                          ),
+                          Spacer(),
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 3.v),
+                            child: CustomIconButton(
+                              height: 42.adaptSize,
+                              width: 42.adaptSize,
+                              padding: EdgeInsets.all(10.h),
+                              decoration: IconButtonStyleHelper.fillIndigoA,
+                              child: SvgPicture.asset(
+                                ImageConstant.imgArrowRight,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 12.v),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 25.h,
+                        vertical: 14.v,
+                      ),
+                      decoration: AppDecoration.outlineGray.copyWith(
+                        borderRadius: BorderRadiusStyle.roundedBorder8,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 22.adaptSize,
+                            margin: EdgeInsets.only(
+                              left: 4.h,
+                              top: 12.v,
+                              bottom: 11.v,
+                            ),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 8.h,
+                              vertical: 1.v,
+                            ),
+                            // decoration:
+                            //     AppDecoration.outlinePrimaryContainer.copyWith(
+                            //   borderRadius: BorderRadiusStyle.circleBorder13,
+                            // ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                              left: 28.h,
+                              top: 11.v,
+                              bottom: 11.v,
+                            ),
+                            child: TextButton(
+                              onPressed: () {
+                                ref
+                                    .read(loginControllerProvider.notifier)
+                                    .signOut();
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    "Sign Out",
+                                    style: CustomTextStyles
+                                        .bodyLargePrimaryContainer_1,
+                                  ),
+                                  Spacer(),
+                                  Padding(
+                                    padding: EdgeInsets.only(bottom: 3.v),
+                                    child: CustomIconButton(
+                                      height: 42.adaptSize,
+                                      width: 42.adaptSize,
+                                      padding: EdgeInsets.all(10.h),
+                                      decoration: BoxDecoration(
+                                        color: Colors.red,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: SvgPicture.asset(
+                                          ImageConstant.imgArrowRight),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
     );
   }

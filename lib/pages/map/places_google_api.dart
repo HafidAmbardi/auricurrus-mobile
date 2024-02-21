@@ -9,13 +9,20 @@ import 'package:uuid/uuid.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hafidomio_s_application2/core/app_export.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:hafidomio_s_application2/widgets/custom_elevated_button.dart';
+import 'package:hafidomio_s_application2/pages/map/map_page.dart';
 
 class PlacesApiGoogleMapSearch extends ConsumerStatefulWidget {
-  const PlacesApiGoogleMapSearch({super.key});
+  final BuildContext? overlayContext;
+  final LatLng? currentLocation;
+
+  const PlacesApiGoogleMapSearch(
+      {this.currentLocation, this.overlayContext, super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _PlacesApiGoogleMapSearchState();
+      _PlacesApiGoogleMapSearchState(
+          currentLocation: currentLocation, overlayContext: overlayContext);
 }
 
 final destinationStateProvider = StateProvider<LatLng?>((ref) {
@@ -25,6 +32,11 @@ final destinationStateProvider = StateProvider<LatLng?>((ref) {
 class _PlacesApiGoogleMapSearchState
     extends ConsumerState<PlacesApiGoogleMapSearch>
     with WidgetsBindingObserver {
+  final BuildContext? overlayContext;
+  final LatLng? currentLocation;
+
+  _PlacesApiGoogleMapSearchState({this.currentLocation, this.overlayContext});
+
   bool isTyping = false;
   String tokenForSession = '12345';
   // make destination a global variable
@@ -65,6 +77,86 @@ class _PlacesApiGoogleMapSearchState
     });
   }
 
+  OverlayEntry? overlayEntry;
+
+  void showOverlay(BuildContext context, LatLng? destination, LatLng? current) {
+    overlayEntry?.remove();
+    overlayEntry = OverlayEntry(
+      builder: (context) => Positioned(
+        bottom: 0,
+        child: Container(
+          child: Align(
+            // custom alignment
+            alignment: Alignment(0, 1),
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              padding: EdgeInsets.symmetric(
+                horizontal: 25.h,
+                vertical: 8.v,
+              ),
+              decoration: AppDecoration.outlineOnPrimaryContainer,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 1.h),
+                    child: Text(
+                      "6 min (1.4 km)",
+                      style: CustomTextStyles.headlineSmallOnError,
+                    ),
+                  ),
+                  SizedBox(height: 2.v),
+                  Padding(
+                    padding: EdgeInsets.only(left: 1.h),
+                    child: Text(
+                      "Rute tercepat saat ini sesuai kondisi lalu lintas",
+                      style: CustomTextStyles.bodyMediumOnError_1,
+                    ),
+                  ),
+                  SizedBox(height: 12.v),
+                  CustomElevatedButton(
+                    text: "Start",
+                    margin: EdgeInsets.only(left: 1.h),
+                    leftIcon: Container(
+                      margin: EdgeInsets.only(right: 10.h),
+                      child: SvgPicture.asset(
+                        ImageConstant.imgSave,
+                        height: 30.adaptSize,
+                        width: 30.adaptSize,
+                      ),
+                    ),
+                    buttonStyle: CustomButtonStyles.none,
+                    decoration:
+                        CustomButtonStyles.gradientIndigoAToPrimaryDecoration,
+                    onPressed: () async {
+                      // print destination with the format "This is the destination:"
+                      print("This is the destination: $current");
+                      if (current != null && destination != null) {
+                        String googleMapsUrl =
+                            'google.navigation:q=${destination.latitude},${destination.longitude}&key=AIzaSyDFnxsNsRe9whZ2_nAVmV4GnaEty-BUogo';
+                        if (await canLaunchUrl(Uri.parse(googleMapsUrl))) {
+                          await launchUrl(Uri.parse(googleMapsUrl));
+                        } else {
+                          throw 'Could not launch $googleMapsUrl';
+                        }
+                      }
+                      overlayEntry?.remove();
+                      overlayEntry = null;
+                    },
+                  ),
+                  SizedBox(height: 21.v),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    Overlay.of(widget.overlayContext ?? context)?.insert(overlayEntry!);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -92,6 +184,8 @@ class _PlacesApiGoogleMapSearchState
   @override
   Widget build(BuildContext context) {
     final destination = ref.watch(destinationStateProvider);
+    final current = ref.watch(currentStateProvider);
+
     return Center(
       child: Container(
           width: MediaQuery.of(context).size.width * 0.9,
@@ -178,7 +272,10 @@ class _PlacesApiGoogleMapSearchState
                                       .state =
                                   LatLng(location.last.latitude,
                                       location.last.longitude);
-                              print(destination);
+                              print("this is the destionation $location");
+                              LatLng wawawa = LatLng(location.last.latitude,
+                                  location.last.longitude);
+                              showOverlay(context, wawawa, current);
 
                               FocusScope.of(context).unfocus(); // Add this line
                               setState(() {

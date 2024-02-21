@@ -9,7 +9,6 @@ import 'package:location/location.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:hafidomio_s_application2/widgets/custom_elevated_button.dart';
 import 'package:hafidomio_s_application2/core/app_export.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -23,10 +22,18 @@ class MapPage extends ConsumerStatefulWidget {
       super.key});
 
   @override
-  ConsumerState<MapPage> createState() => _MapPageState();
+  ConsumerState<MapPage> createState() =>
+      _MapPageState(overlayContext: overlayContext);
 }
 
+final currentStateProvider = StateProvider<LatLng?>((ref) {
+  return null;
+});
+
 class _MapPageState extends ConsumerState<MapPage> {
+  final BuildContext? overlayContext;
+  _MapPageState({this.overlayContext});
+
   Location _locationController = new Location();
   final Completer<GoogleMapController> _mapController =
       Completer<GoogleMapController>();
@@ -35,81 +42,8 @@ class _MapPageState extends ConsumerState<MapPage> {
   LatLng? _currentP;
 
   Map<PolylineId, Polyline> polylines = {};
-
-  void showOverlay(BuildContext context, LatLng destination) {
-    OverlayEntry overlayEntry = OverlayEntry(
-      builder: (context) => Positioned(
-        bottom: 0,
-        child: Container(
-          child: Align(
-            // custom alignment
-            alignment: Alignment(0, 1),
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              padding: EdgeInsets.symmetric(
-                horizontal: 25.h,
-                vertical: 8.v,
-              ),
-              decoration: AppDecoration.outlineOnPrimaryContainer,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 1.h),
-                    child: Text(
-                      "6 min (1.4 km)",
-                      style: CustomTextStyles.headlineSmallOnError,
-                    ),
-                  ),
-                  SizedBox(height: 2.v),
-                  Padding(
-                    padding: EdgeInsets.only(left: 1.h),
-                    child: Text(
-                      "Rute tercepat saat ini sesuai kondisi lalu lintas",
-                      style: CustomTextStyles.bodyMediumOnError_1,
-                    ),
-                  ),
-                  SizedBox(height: 12.v),
-                  CustomElevatedButton(
-                    text: "Start",
-                    margin: EdgeInsets.only(left: 1.h),
-                    leftIcon: Container(
-                      margin: EdgeInsets.only(right: 10.h),
-                      child: SvgPicture.asset(
-                        ImageConstant.imgSave,
-                        height: 30.adaptSize,
-                        width: 30.adaptSize,
-                      ),
-                    ),
-                    buttonStyle: CustomButtonStyles.none,
-                    decoration:
-                        CustomButtonStyles.gradientIndigoAToPrimaryDecoration,
-                    onPressed: () async {
-                      if (_currentP != null && destination != null) {
-                        String googleMapsUrl =
-                            'google.navigation:q=${destination.latitude},${destination.longitude}&key=AIzaSyDo99rpQy1IQ8Yr5ExAr-6suebK4rPx8PY';
-                        if (await canLaunchUrl(Uri.parse(googleMapsUrl))) {
-                          await launchUrl(Uri.parse(googleMapsUrl));
-                        } else {
-                          throw 'Could not launch $googleMapsUrl';
-                        }
-                      }
-                    },
-                  ),
-                  SizedBox(height: 21.v),
-                ],
-              ),
-            ),
-          ),
-          // ... your start button code here
-        ),
-      ),
-    );
-
-    Overlay.of(widget.overlayContext ?? context)?.insert(overlayEntry);
-  }
-
+  OverlayEntry? overlayEntry;
+  final currentPProvider = StateProvider<LatLng?>((ref) => null);
   Set<Marker> markers = {};
   @override
   void initState() {
@@ -121,9 +55,9 @@ class _MapPageState extends ConsumerState<MapPage> {
         });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final destination = ref.watch(destinationStateProvider);
-      if (destination != null) {
-        showOverlay(context, destination);
-      }
+      // if (destination != null) {
+      //   showOverlay(context, destination);
+      // }
     });
   }
 
@@ -170,38 +104,10 @@ class _MapPageState extends ConsumerState<MapPage> {
               polylines: Set<Polyline>.of(polylines.values),
             ),
           widget.showPlacesApiGoogleMapSearch
-              ? PlacesApiGoogleMapSearch()
+              ? PlacesApiGoogleMapSearch(
+                  currentLocation: _currentP, overlayContext: overlayContext)
               : Container(),
           // Start button
-
-          Positioned(
-              bottom: 10,
-              right: 10,
-              child: Container(
-                width: 50,
-                height: 50,
-                decoration:
-                    BoxDecoration(shape: BoxShape.circle, color: Colors.blue),
-                child: Center(
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.navigation_outlined,
-                      color: Colors.white,
-                    ),
-                    onPressed: () async {
-                      if (_currentP != null && destination != null) {
-                        String googleMapsUrl =
-                            'google.navigation:q=${destination.latitude},${destination.longitude}&key=AIzaSyDo99rpQy1IQ8Yr5ExAr-6suebK4rPx8PY';
-                        if (await canLaunchUrl(Uri.parse(googleMapsUrl))) {
-                          await launchUrl(Uri.parse(googleMapsUrl));
-                        } else {
-                          throw 'Could not launch $googleMapsUrl';
-                        }
-                      }
-                    },
-                  ),
-                ),
-              ))
         ],
       ),
     );
@@ -236,6 +142,7 @@ class _MapPageState extends ConsumerState<MapPage> {
         return;
       }
     }
+
     _locationController.onLocationChanged
         .listen((LocationData currentLocation) {
       if (currentLocation.latitude != null &&
@@ -245,6 +152,8 @@ class _MapPageState extends ConsumerState<MapPage> {
               LatLng(currentLocation.latitude!, currentLocation.longitude!);
           print(_currentP);
           _cameraToPosition(_currentP!);
+          ref.read(currentStateProvider.notifier).state =
+              LatLng(currentLocation.latitude!, currentLocation.longitude!);
         });
       }
     });

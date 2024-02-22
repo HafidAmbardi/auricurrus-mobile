@@ -11,6 +11,8 @@ import 'package:hafidomio_s_application2/core/app_export.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:hafidomio_s_application2/widgets/custom_elevated_button.dart';
 import 'package:hafidomio_s_application2/pages/map/map_page.dart';
+import 'package:hafidomio_s_application2/pages/audio/audio_recorder.dart';
+import 'package:flutter/foundation.dart';
 
 class PlacesApiGoogleMapSearch extends ConsumerStatefulWidget {
   final BuildContext? overlayContext;
@@ -28,6 +30,9 @@ class PlacesApiGoogleMapSearch extends ConsumerStatefulWidget {
 final destinationStateProvider = StateProvider<LatLng?>((ref) {
   return null;
 });
+final isStartedStateProvider = StateProvider<bool>((ref) {
+  return false;
+});
 
 class _PlacesApiGoogleMapSearchState
     extends ConsumerState<PlacesApiGoogleMapSearch>
@@ -36,7 +41,8 @@ class _PlacesApiGoogleMapSearchState
   final LatLng? currentLocation;
 
   _PlacesApiGoogleMapSearchState({this.currentLocation, this.overlayContext});
-
+  bool showPlayer = false;
+  String? audioPath;
   bool isTyping = false;
   String tokenForSession = '12345';
   // make destination a global variable
@@ -79,7 +85,9 @@ class _PlacesApiGoogleMapSearchState
 
   OverlayEntry? overlayEntry;
 
-  void showOverlay(BuildContext context, LatLng? destination, LatLng? current) {
+  void showOverlay(BuildContext context, LatLng? destination, LatLng? current,
+      bool isStarted) {
+    print("hee hee haa haa");
     overlayEntry?.remove();
     overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
@@ -110,13 +118,13 @@ class _PlacesApiGoogleMapSearchState
                   Padding(
                     padding: EdgeInsets.only(left: 1.h),
                     child: Text(
-                      "Rute tercepat saat ini sesuai kondisi lalu lintas",
+                      "Fastest route considering traffic conditions",
                       style: CustomTextStyles.bodyMediumOnError_1,
                     ),
                   ),
                   SizedBox(height: 12.v),
                   CustomElevatedButton(
-                    text: "Start",
+                    text: isStarted ? "Finish" : "Start",
                     margin: EdgeInsets.only(left: 1.h),
                     leftIcon: Container(
                       margin: EdgeInsets.only(right: 10.h),
@@ -132,17 +140,32 @@ class _PlacesApiGoogleMapSearchState
                     onPressed: () async {
                       // print destination with the format "This is the destination:"
                       print("This is the destination: $current");
-                      if (current != null && destination != null) {
-                        String googleMapsUrl =
-                            'google.navigation:q=${destination.latitude},${destination.longitude}&key=AIzaSyDFnxsNsRe9whZ2_nAVmV4GnaEty-BUogo';
-                        if (await canLaunchUrl(Uri.parse(googleMapsUrl))) {
-                          await launchUrl(Uri.parse(googleMapsUrl));
-                        } else {
-                          throw 'Could not launch $googleMapsUrl';
+                      if (!isStarted) {
+                        // Add this condition
+                        if (current != null && destination != null) {
+                          String googleMapsUrl =
+                              'google.navigation:q=${destination.latitude},${destination.longitude}&key=AIzaSyDFnxsNsRe9whZ2_nAVmV4GnaEty-BUogo';
+                          if (await canLaunchUrl(Uri.parse(googleMapsUrl))) {
+                            await launchUrl(Uri.parse(googleMapsUrl));
+                          } else {
+                            throw 'Could not launch $googleMapsUrl';
+                          }
                         }
+                        setState(() {
+                          isStarted = true;
+                          ref.read(isStartedStateProvider.notifier).state =
+                              true;
+                        });
+                        showOverlay(context, destination, current, isStarted);
+                      } else {
+                        overlayEntry?.remove();
+                        overlayEntry = null;
+                        setState(() {
+                          isStarted = false; // Add this line
+                          ref.read(isStartedStateProvider.notifier).state =
+                              false;
+                        });
                       }
-                      overlayEntry?.remove();
-                      overlayEntry = null;
                     },
                   ),
                   SizedBox(height: 21.v),
@@ -185,6 +208,7 @@ class _PlacesApiGoogleMapSearchState
   Widget build(BuildContext context) {
     final destination = ref.watch(destinationStateProvider);
     final current = ref.watch(currentStateProvider);
+    final isStarted = ref.watch(isStartedStateProvider);
 
     return Center(
       child: Container(
@@ -275,7 +299,7 @@ class _PlacesApiGoogleMapSearchState
                               print("this is the destionation $location");
                               LatLng wawawa = LatLng(location.last.latitude,
                                   location.last.longitude);
-                              showOverlay(context, wawawa, current);
+                              showOverlay(context, wawawa, current, isStarted);
 
                               FocusScope.of(context).unfocus(); // Add this line
                               setState(() {
@@ -287,6 +311,18 @@ class _PlacesApiGoogleMapSearchState
                         },
                       ),
                     )),
+                Recorder(
+                  onStop: (path) {
+                    if (kDebugMode) print('Recorded file path: $path');
+                    // setState(() {
+                    //   audioPath = path;
+                    //   showPlayer = true;
+                    // });
+
+                    audioPath = path;
+                    showPlayer = true;
+                  },
+                ),
               ])),
     );
   }

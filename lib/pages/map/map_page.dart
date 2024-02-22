@@ -107,7 +107,6 @@ class _MapPageState extends ConsumerState<MapPage> {
               ? PlacesApiGoogleMapSearch(
                   currentLocation: _currentP, overlayContext: overlayContext)
               : Container(),
-          // Start button
         ],
       ),
     );

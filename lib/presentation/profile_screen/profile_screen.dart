@@ -29,6 +29,7 @@ class ProfileScreen extends HookConsumerWidget {
 
     String? userEmail = authenticatedUser?.email;
     String? userUID = authenticatedUser?.uid;
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: appTheme.indigoA70001,
@@ -388,6 +389,8 @@ class ProfileScreen extends HookConsumerWidget {
                       ),
                     ),
                     SizedBox(height: 12.v),
+
+                    // Sign Out button
                     Container(
                       padding: EdgeInsets.symmetric(
                         horizontal: 25.h,
@@ -399,58 +402,26 @@ class ProfileScreen extends HookConsumerWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Container(
-                            width: 22.adaptSize,
-                            margin: EdgeInsets.only(
-                              left: 4.h,
-                              top: 12.v,
-                              bottom: 11.v,
-                            ),
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 8.h,
-                              vertical: 1.v,
-                            ),
-                            // decoration:
-                            //     AppDecoration.outlinePrimaryContainer.copyWith(
-                            //   borderRadius: BorderRadiusStyle.circleBorder13,
-                            // ),
-                          ),
+                          Spacer(),
                           Padding(
-                            padding: EdgeInsets.only(
-                              left: 28.h,
-                              top: 11.v,
-                              bottom: 11.v,
-                            ),
-                            child: TextButton(
+                            padding: EdgeInsets.only(bottom: 3.v),
+                            child: ElevatedButton(
                               onPressed: () {
                                 ref
                                     .read(loginControllerProvider.notifier)
                                     .signOut();
+                                // Navigator.popUntil(context, (route) {
+                                //   return route.settings.name ==
+                                //       AppRoutes.gateScreen;
+                                // });
+                                Navigator.popAndPushNamed(context, AppRoutes.levelHearScreen);
                               },
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    "Sign Out",
-                                    style: CustomTextStyles
-                                        .bodyLargePrimaryContainer_1,
-                                  ),
-                                  Spacer(),
-                                  Padding(
-                                    padding: EdgeInsets.only(bottom: 3.v),
-                                    child: CustomIconButton(
-                                      height: 42.adaptSize,
-                                      width: 42.adaptSize,
-                                      padding: EdgeInsets.all(10.h),
-                                      decoration: BoxDecoration(
-                                        color: Colors.red,
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: SvgPicture.asset(
-                                          ImageConstant.imgArrowRight),
-                                    ),
-                                  ),
-                                ],
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                              ),
+                              child: Text(
+                                "Sign Out",
+                                style: TextStyle(fontSize: 16.0),
                               ),
                             ),
                           ),

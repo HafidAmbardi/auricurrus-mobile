@@ -12,7 +12,7 @@ import 'package:hafidomio_s_application2/widgets/custom_radio_button.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // ignore_for_file: must_be_immutable
-class LevelHearScreen extends HookConsumerWidget {
+class LevelHearScreen extends StatelessWidget {
   LevelHearScreen({Key? key}) : super(key: key);
 
   String levelHear = "";
@@ -25,23 +25,34 @@ class LevelHearScreen extends HookConsumerWidget {
   ];
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final dbService _service = dbService();
-    final authState = ref.watch(authStateProvider);
-    final User? authenticatedUser = authState.value;
+    // final authState = ref.watch(authStateProvider);
+    // final User? authenticatedUser = authState.value;
 
-    String? userEmail = authenticatedUser?.email;
-    String? userUID = authenticatedUser?.uid;
+    // String? userEmail = authenticatedUser?.email;
+    // String? userUID = authenticatedUser?.uid;
 
-    // verify authed user
-    debugPrint("userEmail" + userEmail.toString());
-    debugPrint("userUID" + userUID.toString());
+    // // verify authed user
+    // debugPrint("userEmail" + userEmail.toString());
+    // debugPrint("userUID" + userUID.toString());
+  Map<String, dynamic>? arguments =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
 
-    Map<String, dynamic> arguments =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    return FutureBuilder<Map<String, dynamic>?>(
+      future: Future.value(ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?), 
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done){
+          Map<String, dynamic>? arguments = snapshot.data;
+          if (arguments == null) {
+            // Using Future.delayed to avoid the "setState() during build" issue
+            Future.delayed(Duration.zero, () {
+              Navigator.popAndPushNamed(context, AppRoutes.welcomeSignupScreen);
+            });
+            return Container(); // or some other placeholder widget
+          }
 
-    // Access the dbUser and id
-    dbUser? user = arguments['user'];
+          dbUser? user = arguments['user'];
     String? id = arguments['id'];
 
     debugPrint("user in level hear screen " + user!.name);
@@ -87,6 +98,59 @@ class LevelHearScreen extends HookConsumerWidget {
                       }),
                   SizedBox(height: 5.v)
                 ]))));
+
+
+        }
+        else return CircularProgressIndicator();
+      },);
+
+    // Access the dbUser and id
+    // dbUser? user = arguments['user'];
+    // String? id = arguments['id'];
+
+    // debugPrint("user in level hear screen " + user!.name);
+
+    // return SafeArea(
+    //     child: Scaffold(
+    //         appBar: _buildAppBar(context),
+    //         body: Container(
+    //             width: double.maxFinite,
+    //             padding: EdgeInsets.symmetric(horizontal: 24.h),
+    //             child: Column(children: [
+    //               Container(
+    //                   width: 295.h,
+    //                   margin: EdgeInsets.only(left: 12.h, right: 18.h),
+    //                   child: Text("How big is the level of your hearing loss?",
+    //                       maxLines: 2,
+    //                       overflow: TextOverflow.ellipsis,
+    //                       textAlign: TextAlign.center,
+    //                       style: theme.textTheme.headlineSmall)),
+    //               SizedBox(height: 3.v),
+    //               Align(
+    //                   alignment: Alignment.centerLeft,
+    //                   child: Container(
+    //                       width: 298.h,
+    //                       margin: EdgeInsets.only(left: 4.h, right: 23.h),
+    //                       child: Text(
+    //                           "So we can adjust the functionally of the App",
+    //                           maxLines: 2,
+    //                           overflow: TextOverflow.ellipsis,
+    //                           textAlign: TextAlign.center,
+    //                           style: CustomTextStyles.bodyLargePrimaryContainer
+    //                               .copyWith(height: 1.40)))),
+    //               SizedBox(height: 14.v),
+    //               _buildLevelHear(context, user, id, _service),
+    //               SizedBox(height: 92.v),
+    //               CustomElevatedButton(
+    //                   text: "Continue",
+    //                   buttonStyle: CustomButtonStyles.none,
+    //                   decoration:
+    //                       CustomButtonStyles.gradientIndigoAToPrimaryDecoration,
+    //                   onPressed: () {
+    //                     onTapContinue(context, user, id);
+    //                   }),
+    //               SizedBox(height: 5.v)
+    //             ]))));
   }
 
   /// Section Widget
@@ -196,8 +260,14 @@ class LevelHearScreen extends HookConsumerWidget {
   }
 
   /// Navigates to the bluetoothScreen when the action is triggered.
+  // onTapContinue(BuildContext context, dbUser? user, String? id) {
+  //   Navigator.pushNamed(context, AppRoutes.bluetoothScreen,
+  //       arguments: {'user': user, 'id': id});
+  // }
   onTapContinue(BuildContext context, dbUser? user, String? id) {
-    Navigator.pushNamed(context, AppRoutes.bluetoothScreen,
+    Navigator.pushNamed(context, AppRoutes.dashboardContainerScreen,
         arguments: {'user': user, 'id': id});
+    // Navigator.popUntil(context, (AppRoutes.nameFilledScreen) => true);
+    // Navigator.popAndPushNamed(context, AppRoutes.nameFilledScreen, arguments: {'user': user, 'id': id} );
   }
 }

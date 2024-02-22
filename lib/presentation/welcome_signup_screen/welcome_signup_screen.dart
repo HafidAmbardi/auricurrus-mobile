@@ -119,6 +119,5 @@ class WelcomeSignupScreen extends HookConsumerWidget {
       AppRoutes.personalScreen,
       arguments: {'user': user, 'id': id},
     );
-    // Navigator.pushNamed(context, PersonalScreen());
   }
 }

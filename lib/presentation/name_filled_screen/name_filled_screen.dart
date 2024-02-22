@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hafidomio_s_application2/backend/controllers/db-service.dart';
+import 'package:hafidomio_s_application2/backend/login_controller/login_controller.dart';
 import 'package:hafidomio_s_application2/backend/model/user.dart';
 import 'package:hafidomio_s_application2/backend/providers/auth_provider.dart';
 import 'package:hafidomio_s_application2/core/app_export.dart';
@@ -10,28 +11,19 @@ import 'package:hafidomio_s_application2/widgets/app_bar/custom_app_bar.dart';
 import 'package:hafidomio_s_application2/widgets/custom_elevated_button.dart';
 // import 'package:hafidomio_s_application2/widgets/custom_icon_button.dart';
 // import 'package:hafidomio_s_application2/widgets/custom_text_form_field.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+// import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // ignore_for_file: must_be_immutable
-class NameFilledScreen extends HookConsumerWidget {
+class NameFilledScreen extends StatelessWidget {
   NameFilledScreen({Key? key}) : super(key: key);
 
   TextEditingController nameController = TextEditingController();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     // initialize services
     final dbService _service = dbService();
-    final authState = ref.watch(authStateProvider);
-    final User? authenticatedUser = authState.value;
-
-    String? userEmail = authenticatedUser?.email;
-    String? userUID = authenticatedUser?.uid;
-
-    // verify authed user
-    debugPrint("userEmail" + userEmail.toString());
-    debugPrint("userUID" + userUID.toString());
-
+    
     Map<String, dynamic> arguments =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 

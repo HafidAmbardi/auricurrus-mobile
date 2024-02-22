@@ -28,6 +28,8 @@ class _RecorderState extends State<Recorder> with AudioRecorderMixin {
   RecordState _recordState = RecordState.stop;
   StreamSubscription<Amplitude>? _amplitudeSub;
   Amplitude? _amplitude;
+  bool isTimerScheduled = false;
+  late Timer honkTimer;
 
   @override
   void initState() {
@@ -148,13 +150,27 @@ class _RecorderState extends State<Recorder> with AudioRecorderMixin {
     double threshold = -80.0;
 
     if (_amplitude != null && _amplitude!.current > threshold) {
-    // Call the sendMessage method with a predefined message or customize as needed
-    // ChatScreen chat = ChatScreen();
-    // ChatScreen.chatScreenStateKey.currentState?.sendMessage('honk2');
-    sendMessage('honk');
-    debugPrint('message sent honk2');
-    // _sendMessage("honk1");
+        sendMessage('honk');
+        debugPrint('message sent honk');
+    // sendMessage('honk');
+    // debugPrint('message sent honk');
   }
+
+  // if (_amplitude != null && _amplitude!.current > threshold) {
+  //   if (!isTimerScheduled) {
+  //     isTimerScheduled = true;
+
+  //     honkTimer = Timer.periodic(Duration(seconds: 2), (timer) {
+  //       sendMessage('honk');
+  //       debugPrint('message sent honk');
+  //     });
+  //   }
+  // } else {
+  //   if (isTimerScheduled) {
+  //     isTimerScheduled = false;
+  //     honkTimer.cancel();
+  //   }
+  // }
     
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
       _buildRecordStopControl(),

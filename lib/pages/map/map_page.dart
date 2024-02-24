@@ -158,30 +158,37 @@ class _MapPageState extends ConsumerState<MapPage> {
     });
   }
 
+  Map<String, List<LatLng>> _cache = {};
+
   Future<List<LatLng>> getPolylinePoints() async {
     final destination = ref.watch(destinationStateProvider);
-    //final currentPosition = _currentP != null ? PointLatLng(_currentP!.latitude, _currentP!.longitude) : PointLatLng(0, 0),
 
     List<LatLng> polylineCoordinates = [];
     PolylinePoints polylinePoints = PolylinePoints();
     if (_currentP != null && destination != null) {
-      // TODO add try catch
-      PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-          GOOGLE_MAPS_API_KEY,
-          // PointLatLng(_pGooglePlex.latitude, _pGooglePlex.longitude),
-
-          PointLatLng(_currentP!.latitude, _currentP!.longitude),
-          PointLatLng(destination.latitude, destination.longitude),
-          // PointLatLng(destination!.latitude, destination!.longitude),
-          // I can change the travel mode later
-          travelMode: TravelMode.driving);
-
-      if (result.points.isNotEmpty) {
-        result.points.forEach((PointLatLng point) {
-          polylineCoordinates.add(LatLng(point.latitude, point.longitude));
-        });
+      String cacheKey =
+          "${_currentP!.latitude},${_currentP!.longitude},${destination.latitude},${destination.longitude}";
+      if (_cache.containsKey(cacheKey)) {
+        print(
+            "Cache hit for key search: $cacheKey"); // Debugging print statement
+        return _cache[cacheKey]!;
       } else {
-        print(result.errorMessage);
+        print(
+            "Cache miss for key search: $cacheKey"); // Debugging print statement
+        PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+            GOOGLE_MAPS_API_KEY,
+            PointLatLng(_currentP!.latitude, _currentP!.longitude),
+            PointLatLng(destination.latitude, destination.longitude),
+            travelMode: TravelMode.driving);
+
+        if (result.points.isNotEmpty) {
+          result.points.forEach((PointLatLng point) {
+            polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+          });
+          _cache[cacheKey] = polylineCoordinates;
+        } else {
+          print(result.errorMessage);
+        }
       }
     }
     return polylineCoordinates;

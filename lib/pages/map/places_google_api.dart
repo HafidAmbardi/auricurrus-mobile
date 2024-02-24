@@ -13,6 +13,8 @@ import 'package:hafidomio_s_application2/widgets/custom_elevated_button.dart';
 import 'package:hafidomio_s_application2/pages/map/map_page.dart';
 import 'package:hafidomio_s_application2/pages/audio/audio_recorder.dart';
 import 'package:flutter/foundation.dart';
+// import consts.dart
+import 'package:hafidomio_s_application2/pages/consts/consts.dart';
 
 class PlacesApiGoogleMapSearch extends ConsumerStatefulWidget {
   final BuildContext? overlayContext;
@@ -52,27 +54,38 @@ class _PlacesApiGoogleMapSearchState
   List<dynamic> listForPlaces = [];
 
   final TextEditingController _controller = TextEditingController();
+  Map<String, dynamic> _cache = {};
+
   void makeSuggestions(String input) async {
-    String googlePlacesApiKey = GOOGLE_MAPS_API_KEY;
-    String groundURL =
-        'https://maps.googleapis.com/maps/api/place/autocomplete/json';
-    String request =
-        '$groundURL?input=$input&key=$googlePlacesApiKey&sessiontoken=$tokenForSession';
-
-    var responseResult = await http.get(Uri.parse(request));
-
-    var resultData = responseResult.body.toString();
-
-    print('Result Data');
-    print(resultData);
-
-    if (responseResult.statusCode == 200) {
+    if (_cache.containsKey(input)) {
+      print("Cache hit for input: $input");
       setState(() {
-        listForPlaces =
-            jsonDecode(responseResult.body.toString())['predictions'];
+        listForPlaces = _cache[input];
       });
     } else {
-      throw Exception('Failed to load predictions');
+      print("Cache miss for input: $input");
+      String googlePlacesApiKey = GOOGLE_MAPS_API_KEY;
+      String groundURL =
+          'https://maps.googleapis.com/maps/api/place/autocomplete/json';
+      String request =
+          '$groundURL?input=$input&key=$googlePlacesApiKey&sessiontoken=$tokenForSession';
+
+      var responseResult = await http.get(Uri.parse(request));
+
+      var resultData = responseResult.body.toString();
+
+      print('Result Data');
+      print(resultData);
+
+      if (responseResult.statusCode == 200) {
+        setState(() {
+          listForPlaces =
+              jsonDecode(responseResult.body.toString())['predictions'];
+          _cache[input] = listForPlaces;
+        });
+      } else {
+        throw Exception('Failed to load predictions');
+      }
     }
   }
 
@@ -144,7 +157,7 @@ class _PlacesApiGoogleMapSearchState
                         // Add this condition
                         if (current != null && destination != null) {
                           String googleMapsUrl =
-                              'google.navigation:q=${destination.latitude},${destination.longitude}&key=AIzaSyDFnxsNsRe9whZ2_nAVmV4GnaEty-BUogo';
+                              'google.navigation:q=${destination.latitude},${destination.longitude}&key=${GOOGLE_MAPS_API_KEY}';
                           if (await canLaunchUrl(Uri.parse(googleMapsUrl))) {
                             await launchUrl(Uri.parse(googleMapsUrl));
                           } else {

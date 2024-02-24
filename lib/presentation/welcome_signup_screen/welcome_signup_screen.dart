@@ -22,12 +22,25 @@ class WelcomeSignupScreen extends HookConsumerWidget {
     final authState = ref.watch(authStateProvider);
     final User? authenticatedUser = authState.value;
 
+    
+
     String? userEmail = authenticatedUser?.email;
     String? userUID = authenticatedUser?.uid;
 
-    // verify authed user
     debugPrint("userEmail" + userEmail.toString());
     debugPrint("userUID" + userUID.toString());
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (authenticatedUser == null) {
+        // Navigate to the login page if not authenticated
+        Navigator.pushReplacementNamed(context, AppRoutes.login);
+        return;
+      }
+    });
+
+    if (authenticatedUser == null) {
+      return SizedBox.shrink(); // or return Container() based on your UI requirements
+    }
 
     return StreamBuilder<QuerySnapshot>(
       stream: _service.getUsers(),

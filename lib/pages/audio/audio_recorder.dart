@@ -5,22 +5,24 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:record/record.dart';
 import 'package:hafidomio_s_application2/pages/audio/audio_recorder_platform.dart';
+import 'package:hafidomio_s_application2/pages/map/places_google_api.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hafidomio_s_application2/backend/controllers/chat.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
-class Recorder extends StatefulWidget {
+class Recorder extends ConsumerStatefulWidget {
   final void Function(String path) onStop;
   // final void Function(String message) onSendMessage;
 
-  final IO.Socket socket;
+  final IO.Socket? socket;
 
   const Recorder({super.key, required this.onStop, required this.socket});
 
   @override
-  State<Recorder> createState() => _RecorderState();
+  ConsumerState<Recorder> createState() => _RecorderState();
 }
 
-class _RecorderState extends State<Recorder> with AudioRecorderMixin {
+class _RecorderState extends ConsumerState<Recorder> with AudioRecorderMixin {
   int _recordDuration = 0;
   Timer? _timer;
   late final AudioRecorder _audioRecorder;
@@ -49,17 +51,17 @@ class _RecorderState extends State<Recorder> with AudioRecorderMixin {
   }
 
   void connectServer() {
-    widget.socket.connect();
-    widget.socket.onConnect((_) {
+    widget.socket!.connect();
+    widget.socket!.onConnect((_) {
       debugPrint('connected to server blabla');
     });
-    widget.socket.on('connect_error', (data) {
+    widget.socket!.on('connect_error', (data) {
       debugPrint('Error connecting to server: $data');
     });
   }
 
   void sendMessage([String? s]) {
-    widget.socket.emit('chat_message', s);
+    widget.socket!.emit('chat_message', s);
   }
 
   Future<void> _start() async {
@@ -145,6 +147,7 @@ class _RecorderState extends State<Recorder> with AudioRecorderMixin {
 
   @override
   Widget build(BuildContext context) {
+    final isStarted = ref.watch(isStartedStateProvider);
     debugPrint('Current Amplitude: ${_amplitude?.current}');
 
     double threshold = -80.0;
@@ -173,10 +176,7 @@ class _RecorderState extends State<Recorder> with AudioRecorderMixin {
   // }
     
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-      _buildRecordStopControl(),
-      const SizedBox(width: 20),
-      _buildPauseResumeControl(),
-      const SizedBox(width: 20),
+      _buildRecordStopControl(isStarted),
       _buildText(),
       const SizedBox(width: 20),
       if (_amplitude != null) ...[
@@ -196,7 +196,7 @@ class _RecorderState extends State<Recorder> with AudioRecorderMixin {
     super.dispose();
   }
 
-  Widget _buildRecordStopControl() {
+  Widget _buildRecordStopControl(bool isStarted) {
     late Icon icon;
     late Color color;
 
@@ -208,15 +208,17 @@ class _RecorderState extends State<Recorder> with AudioRecorderMixin {
       icon = Icon(Icons.mic, color: theme.primaryColor, size: 30);
       color = theme.primaryColor.withOpacity(0.1);
     }
-
+    print('isStarted: $isStarted');
+    if (isStarted && _recordState == RecordState.stop) {
+      _start();
+    } else if (!isStarted && _recordState == RecordState.record) {
+      _stop();
+    }
     return ClipOval(
       child: Material(
         color: color,
         child: InkWell(
           child: SizedBox(width: 56, height: 56, child: icon),
-          onTap: () {
-            (_recordState != RecordState.stop) ? _stop() : _start();
-          },
         ),
       ),
     );

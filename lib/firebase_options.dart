@@ -63,7 +63,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '526244443879',
     projectId: 'auricurrus',
     storageBucket: 'auricurrus.appspot.com',
-    androidClientId: '526244443879-smjrlqbu121da8t73d90amv7ua6p6u9g.apps.googleusercontent.com',
+    androidClientId: '526244443879-6v1g602jbpha6hkh7bdlco6qqn1dojso.apps.googleusercontent.com',
     iosClientId: '526244443879-5li0aap495epj1svlskb31jvcihgoaoh.apps.googleusercontent.com',
     iosBundleId: 'com.hafidomiosapplication.app',
   );

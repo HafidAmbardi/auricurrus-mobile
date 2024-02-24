@@ -8,25 +8,36 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:url_launcher/url_launcher.dart';
-import 'package:hafidomio_s_application2/widgets/custom_elevated_button.dart';
 import 'package:hafidomio_s_application2/core/app_export.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class MapPage extends ConsumerStatefulWidget {
   final bool showPlacesApiGoogleMapSearch;
   final BuildContext? overlayContext;
+  final IO.Socket? socket;
 
   const MapPage(
       {this.overlayContext,
       this.showPlacesApiGoogleMapSearch = true,
+      this.socket,
       super.key});
 
   @override
-  ConsumerState<MapPage> createState() => _MapPageState();
+  ConsumerState<MapPage> createState() =>
+      _MapPageState(overlayContext: overlayContext, socket: socket);
 }
 
+final currentStateProvider = StateProvider<LatLng?>((ref) {
+  return null;
+});
+
 class _MapPageState extends ConsumerState<MapPage> {
+  final BuildContext? overlayContext;
+  final IO.Socket? socket;
+  _MapPageState({this.overlayContext, this.socket});
+
   Location _locationController = new Location();
   final Completer<GoogleMapController> _mapController =
       Completer<GoogleMapController>();
@@ -35,81 +46,8 @@ class _MapPageState extends ConsumerState<MapPage> {
   LatLng? _currentP;
 
   Map<PolylineId, Polyline> polylines = {};
-
-  void showOverlay(BuildContext context, LatLng destination) {
-    OverlayEntry overlayEntry = OverlayEntry(
-      builder: (context) => Positioned(
-        bottom: 0,
-        child: Container(
-          child: Align(
-            // custom alignment
-            alignment: Alignment(0, 1),
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              padding: EdgeInsets.symmetric(
-                horizontal: 25.h,
-                vertical: 8.v,
-              ),
-              decoration: AppDecoration.outlineOnPrimaryContainer,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 1.h),
-                    child: Text(
-                      "6 min (1.4 km)",
-                      style: CustomTextStyles.headlineSmallOnError,
-                    ),
-                  ),
-                  SizedBox(height: 2.v),
-                  Padding(
-                    padding: EdgeInsets.only(left: 1.h),
-                    child: Text(
-                      "Rute tercepat saat ini sesuai kondisi lalu lintas",
-                      style: CustomTextStyles.bodyMediumOnError_1,
-                    ),
-                  ),
-                  SizedBox(height: 12.v),
-                  CustomElevatedButton(
-                    text: "Start",
-                    margin: EdgeInsets.only(left: 1.h),
-                    leftIcon: Container(
-                      margin: EdgeInsets.only(right: 10.h),
-                      child: SvgPicture.asset(
-                        ImageConstant.imgSave,
-                        height: 30.adaptSize,
-                        width: 30.adaptSize,
-                      ),
-                    ),
-                    buttonStyle: CustomButtonStyles.none,
-                    decoration:
-                        CustomButtonStyles.gradientIndigoAToPrimaryDecoration,
-                    onPressed: () async {
-                      if (_currentP != null && destination != null) {
-                        String googleMapsUrl =
-                            'google.navigation:q=${destination.latitude},${destination.longitude}&key=AIzaSyDFnxsNsRe9whZ2_nAVmV4GnaEty-BUogo';
-                        if (await canLaunchUrl(Uri.parse(googleMapsUrl))) {
-                          await launchUrl(Uri.parse(googleMapsUrl));
-                        } else {
-                          throw 'Could not launch $googleMapsUrl';
-                        }
-                      }
-                    },
-                  ),
-                  SizedBox(height: 21.v),
-                ],
-              ),
-            ),
-          ),
-          // ... your start button code here
-        ),
-      ),
-    );
-
-    Overlay.of(widget.overlayContext ?? context)?.insert(overlayEntry);
-  }
-
+  OverlayEntry? overlayEntry;
+  final currentPProvider = StateProvider<LatLng?>((ref) => null);
   Set<Marker> markers = {};
   @override
   void initState() {
@@ -121,9 +59,9 @@ class _MapPageState extends ConsumerState<MapPage> {
         });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final destination = ref.watch(destinationStateProvider);
-      if (destination != null) {
-        showOverlay(context, destination);
-      }
+      // if (destination != null) {
+      //   showOverlay(context, destination);
+      // }
     });
   }
 
@@ -170,38 +108,9 @@ class _MapPageState extends ConsumerState<MapPage> {
               polylines: Set<Polyline>.of(polylines.values),
             ),
           widget.showPlacesApiGoogleMapSearch
-              ? PlacesApiGoogleMapSearch()
+              ? PlacesApiGoogleMapSearch(
+                  currentLocation: _currentP, overlayContext: overlayContext, socket: socket,)
               : Container(),
-          // Start button
-
-          Positioned(
-              bottom: 10,
-              right: 10,
-              child: Container(
-                width: 50,
-                height: 50,
-                decoration:
-                    BoxDecoration(shape: BoxShape.circle, color: Colors.blue),
-                child: Center(
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.navigation_outlined,
-                      color: Colors.white,
-                    ),
-                    onPressed: () async {
-                      if (_currentP != null && destination != null) {
-                        String googleMapsUrl =
-                            'google.navigation:q=${destination.latitude},${destination.longitude}&key=AIzaSyDFnxsNsRe9whZ2_nAVmV4GnaEty-BUogo';
-                        if (await canLaunchUrl(Uri.parse(googleMapsUrl))) {
-                          await launchUrl(Uri.parse(googleMapsUrl));
-                        } else {
-                          throw 'Could not launch $googleMapsUrl';
-                        }
-                      }
-                    },
-                  ),
-                ),
-              ))
         ],
       ),
     );
@@ -236,6 +145,7 @@ class _MapPageState extends ConsumerState<MapPage> {
         return;
       }
     }
+
     _locationController.onLocationChanged
         .listen((LocationData currentLocation) {
       if (currentLocation.latitude != null &&
@@ -245,10 +155,14 @@ class _MapPageState extends ConsumerState<MapPage> {
               LatLng(currentLocation.latitude!, currentLocation.longitude!);
           print(_currentP);
           _cameraToPosition(_currentP!);
+          ref.read(currentStateProvider.notifier).state =
+              LatLng(currentLocation.latitude!, currentLocation.longitude!);
         });
       }
     });
   }
+
+  Map<String, List<LatLng>> _cache = {};
 
   Future<List<LatLng>> getPolylinePoints() async {
     final destination = ref.watch(destinationStateProvider);
@@ -257,23 +171,49 @@ class _MapPageState extends ConsumerState<MapPage> {
     List<LatLng> polylineCoordinates = [];
     PolylinePoints polylinePoints = PolylinePoints();
     if (_currentP != null && destination != null) {
-      // TODO add try catch
-      PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-          GOOGLE_MAPS_API_KEY,
-          // PointLatLng(_pGooglePlex.latitude, _pGooglePlex.longitude),
+      String cacheKey =
 
-          PointLatLng(_currentP!.latitude, _currentP!.longitude),
-          PointLatLng(destination.latitude, destination.longitude),
-          // PointLatLng(destination!.latitude, destination!.longitude),
-          // I can change the travel mode later
-          travelMode: TravelMode.driving);
+          "${_currentP!.latitude},${_currentP!.longitude},${destination.latitude},${destination.longitude}";
 
-      if (result.points.isNotEmpty) {
-        result.points.forEach((PointLatLng point) {
-          polylineCoordinates.add(LatLng(point.latitude, point.longitude));
-        });
+      if (_cache.containsKey(cacheKey)) {
+
+        print(
+
+            "Cache hit for key search: $cacheKey"); // Debugging print statement
+
+        return _cache[cacheKey]!;
       } else {
-        print(result.errorMessage);
+         print(
+
+            "Cache miss for key search: $cacheKey"); // Debugging print statement
+
+        PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+
+            GOOGLE_MAPS_API_KEY,
+
+            PointLatLng(_currentP!.latitude, _currentP!.longitude),
+
+            PointLatLng(destination.latitude, destination.longitude),
+
+            travelMode: TravelMode.driving);
+
+
+
+        if (result.points.isNotEmpty) {
+
+          result.points.forEach((PointLatLng point) {
+
+            polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+
+          });
+
+          _cache[cacheKey] = polylineCoordinates;
+
+        } else {
+
+          print(result.errorMessage);
+
+        }
       }
     }
     return polylineCoordinates;

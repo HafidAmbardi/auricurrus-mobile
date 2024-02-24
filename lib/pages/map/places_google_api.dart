@@ -5,26 +5,48 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:uuid/uuid.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hafidomio_s_application2/core/app_export.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:hafidomio_s_application2/widgets/custom_elevated_button.dart';
+import 'package:hafidomio_s_application2/pages/map/map_page.dart';
+import 'package:hafidomio_s_application2/pages/audio/audio_recorder.dart';
+import 'package:flutter/foundation.dart';
+import 'package:hafidomio_s_application2/pages/consts/consts.dart';
 
 class PlacesApiGoogleMapSearch extends ConsumerStatefulWidget {
-  const PlacesApiGoogleMapSearch({super.key});
+  final BuildContext? overlayContext;
+  final LatLng? currentLocation;
+  final IO.Socket? socket; 
+
+  const PlacesApiGoogleMapSearch(
+      {this.currentLocation, this.overlayContext, required this.socket, super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _PlacesApiGoogleMapSearchState();
+      _PlacesApiGoogleMapSearchState(
+          currentLocation: currentLocation, overlayContext: overlayContext, socket: socket);
 }
 
 final destinationStateProvider = StateProvider<LatLng?>((ref) {
   return null;
 });
+final isStartedStateProvider = StateProvider<bool>((ref) {
+  return false;
+});
 
 class _PlacesApiGoogleMapSearchState
     extends ConsumerState<PlacesApiGoogleMapSearch>
     with WidgetsBindingObserver {
+  final BuildContext? overlayContext;
+  final LatLng? currentLocation;
+  final IO.Socket? socket;
+
+  _PlacesApiGoogleMapSearchState({this.currentLocation, this.overlayContext, this.socket});
+  bool showPlayer = false;
+  String? audioPath;
   bool isTyping = false;
   String tokenForSession = '12345';
   // make destination a global variable
@@ -34,13 +56,33 @@ class _PlacesApiGoogleMapSearchState
   List<dynamic> listForPlaces = [];
 
   final TextEditingController _controller = TextEditingController();
+   Map<String, dynamic> _cache = {};
+   
   void makeSuggestions(String input) async {
-    String googlePlacesApiKey = GOOGLE_MAPS_API_KEY;
-    String groundURL =
-        'https://maps.googleapis.com/maps/api/place/autocomplete/json';
-    String request =
-        '$groundURL?input=$input&key=$googlePlacesApiKey&sessiontoken=$tokenForSession';
+    if (_cache.containsKey(input)) {
 
+      print("Cache hit for input: $input");
+
+      setState(() {
+
+        listForPlaces = _cache[input];
+
+      });
+
+    } else {
+
+      print("Cache miss for input: $input");
+
+      String googlePlacesApiKey = GOOGLE_MAPS_API_KEY;
+
+      String groundURL =
+
+          'https://maps.googleapis.com/maps/api/place/autocomplete/json';
+
+      String request =
+
+          '$groundURL?input=$input&key=$googlePlacesApiKey&sessiontoken=$tokenForSession';
+    
     var responseResult = await http.get(Uri.parse(request));
 
     var resultData = responseResult.body.toString();
@@ -52,10 +94,12 @@ class _PlacesApiGoogleMapSearchState
       setState(() {
         listForPlaces =
             jsonDecode(responseResult.body.toString())['predictions'];
+             _cache[input] = listForPlaces;
       });
     } else {
       throw Exception('Failed to load predictions');
     }
+  }
   }
 
   void onModify() {
@@ -63,6 +107,103 @@ class _PlacesApiGoogleMapSearchState
     setState(() {
       isTyping = _controller.text.isNotEmpty; // Update this line
     });
+  }
+
+  OverlayEntry? overlayEntry;
+
+  void showOverlay(BuildContext context, LatLng? destination, LatLng? current,
+      bool isStarted) {
+    print("hee hee haa haa");
+    overlayEntry?.remove();
+    overlayEntry = OverlayEntry(
+      builder: (context) => Positioned(
+        bottom: 0,
+        child: Container(
+          child: Align(
+            // custom alignment
+            alignment: Alignment(0, 1),
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              padding: EdgeInsets.symmetric(
+                horizontal: 25.h,
+                vertical: 8.v,
+              ),
+              decoration: AppDecoration.outlineOnPrimaryContainer,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 1.h),
+                    child: Text(
+                      "6 min (1.4 km)",
+                      style: CustomTextStyles.headlineSmallOnError,
+                    ),
+                  ),
+                  SizedBox(height: 2.v),
+                  Padding(
+                    padding: EdgeInsets.only(left: 1.h),
+                    child: Text(
+                      "Fastest route considering traffic conditions",
+                      style: CustomTextStyles.bodyMediumOnError_1,
+                    ),
+                  ),
+                  SizedBox(height: 12.v),
+                  CustomElevatedButton(
+                    text: isStarted ? "Finish" : "Start",
+                    margin: EdgeInsets.only(left: 1.h),
+                    leftIcon: Container(
+                      margin: EdgeInsets.only(right: 10.h),
+                      child: SvgPicture.asset(
+                        ImageConstant.imgSave,
+                        height: 30.adaptSize,
+                        width: 30.adaptSize,
+                      ),
+                    ),
+                    buttonStyle: CustomButtonStyles.none,
+                    decoration:
+                        CustomButtonStyles.gradientIndigoAToPrimaryDecoration,
+                    onPressed: () async {
+                      // print destination with the format "This is the destination:"
+                      print("This is the destination: $current");
+                      if (!isStarted) {
+                        // Add this condition
+                        if (current != null && destination != null) {
+                          String googleMapsUrl =
+                              'google.navigation:q=${destination.latitude},${destination.longitude}&key=${GOOGLE_MAPS_API_KEY}';
+                          if (await canLaunchUrl(Uri.parse(googleMapsUrl))) {
+                            await launchUrl(Uri.parse(googleMapsUrl));
+                          } else {
+                            throw 'Could not launch $googleMapsUrl';
+                          }
+                        }
+                        setState(() {
+                          isStarted = true;
+                          ref.read(isStartedStateProvider.notifier).state =
+                              true;
+                        });
+                        showOverlay(context, destination, current, isStarted);
+                      } else {
+                        overlayEntry?.remove();
+                        overlayEntry = null;
+                        setState(() {
+                          isStarted = false; // Add this line
+                          ref.read(isStartedStateProvider.notifier).state =
+                              false;
+                        });
+                      }
+                    },
+                  ),
+                  SizedBox(height: 21.v),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    Overlay.of(widget.overlayContext ?? context)?.insert(overlayEntry!);
   }
 
   @override
@@ -92,6 +233,9 @@ class _PlacesApiGoogleMapSearchState
   @override
   Widget build(BuildContext context) {
     final destination = ref.watch(destinationStateProvider);
+    final current = ref.watch(currentStateProvider);
+    final isStarted = ref.watch(isStartedStateProvider);
+
     return Center(
       child: Container(
           width: MediaQuery.of(context).size.width * 0.9,
@@ -178,7 +322,10 @@ class _PlacesApiGoogleMapSearchState
                                       .state =
                                   LatLng(location.last.latitude,
                                       location.last.longitude);
-                              print(destination);
+                              print("this is the destionation $location");
+                              LatLng wawawa = LatLng(location.last.latitude,
+                                  location.last.longitude);
+                              showOverlay(context, wawawa, current, isStarted);
 
                               FocusScope.of(context).unfocus(); // Add this line
                               setState(() {
@@ -190,6 +337,18 @@ class _PlacesApiGoogleMapSearchState
                         },
                       ),
                     )),
+                Recorder(
+                  onStop: (path) {
+                    if (kDebugMode) print('Recorded file path: $path');
+                    // setState(() {
+                    //   audioPath = path;
+                    //   showPlayer = true;
+                    // });
+
+                    audioPath = path;
+                    showPlayer = true;
+                  }, socket: socket,
+                ),
               ])),
     );
   }

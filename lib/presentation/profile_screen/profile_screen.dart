@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hafidomio_s_application2/backend/login_controller/login_controller.dart';
+import 'package:hafidomio_s_application2/backend/model/user.dart';
 import 'package:hafidomio_s_application2/backend/providers/auth_provider.dart';
 import 'package:hafidomio_s_application2/core/app_export.dart';
 import 'package:hafidomio_s_application2/presentation/dashboard_page/dashboard_page.dart';
@@ -15,7 +16,9 @@ import 'package:hafidomio_s_application2/widgets/app_bar/custom_app_bar.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class ProfileScreen extends HookConsumerWidget {
-  ProfileScreen({Key? key})
+  final VoidCallback? onSignOut;
+  final dbUser? user;
+  ProfileScreen({Key? key, this.onSignOut, this.user})
       : super(
           key: key,
         );
@@ -52,7 +55,7 @@ class ProfileScreen extends HookConsumerWidget {
                         margin: EdgeInsets.only(top: 5.v),
                         child: Stack(alignment: Alignment.center, children: [
                           AppbarTitle(
-                              text: "Josephine",
+                              text: user!.name,
                               margin: EdgeInsets.only(
                                   top: 19.v, right: 192.h, bottom: 22.v)),
                           AppbarSubtitleFour(
@@ -406,6 +409,14 @@ class ProfileScreen extends HookConsumerWidget {
                           Padding(
                             padding: EdgeInsets.only(bottom: 3.v),
                             child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                              ),
+                              child: Text(
+                                "Sign Out",
+                                style: TextStyle(fontSize: 16.0),
+                                // onLongPress: ref.read(loginControllerProvider.notifier).signOut(),
+                              ),
                               onPressed: () {
                                 ref
                                     .read(loginControllerProvider.notifier)
@@ -414,15 +425,11 @@ class ProfileScreen extends HookConsumerWidget {
                                 //   return route.settings.name ==
                                 //       AppRoutes.gateScreen;
                                 // });
-                                Navigator.popAndPushNamed(context, AppRoutes.levelHearScreen);
+                                // Navigator.popAndPushNamed(context, AppRoutes.levelHearScreen);
+                                // Navigator.pushNamed(context, AppRoutes.gateScreen);
+                                onSignOut?.call();
+                                debugPrint('called onsignout callback');
                               },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.red,
-                              ),
-                              child: Text(
-                                "Sign Out",
-                                style: TextStyle(fontSize: 16.0),
-                              ),
                             ),
                           ),
                         ],

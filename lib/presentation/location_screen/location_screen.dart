@@ -30,18 +30,6 @@ class LocationScreen extends StatelessWidget {
         overlayContext: overlayContext,
         showPlacesApiGoogleMapSearch: true,
       ),
-      Recorder(
-        onStop: (path) {
-          if (kDebugMode) print('Recorded file path: $path');
-          // setState(() {
-          //   audioPath = path;
-          //   showPlayer = true;
-          // });
-
-          audioPath = path;
-          showPlayer = true;
-        }, socket: socket!,
-      ),
     ]);
   }
 

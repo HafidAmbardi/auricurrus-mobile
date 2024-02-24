@@ -57,11 +57,8 @@ class _GateScreenState extends ConsumerState<GateScreen> {
                       buttonStyle: CustomButtonStyles.none,
                       decoration:
                           CustomButtonStyles.gradientGrayToGrayDecoration,
-                      // onPressed: () {
-                      //   // onTapSignUpWithGoogle(context);
-                      //   // googleSignInButton();
-                      // }
-                      onPressed: ref.read(loginControllerProvider.notifier).login,)
+                      onPressed: ref.read(loginControllerProvider.notifier).login,
+                      )
                 ]))));
   }
 

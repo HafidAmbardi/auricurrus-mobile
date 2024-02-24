@@ -1,5 +1,5 @@
 import 'package:hafidomio_s_application2/backend/model/user.dart';
-
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 import '../dashboard_page/widgets/howlong_item_widget.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -22,14 +22,15 @@ import 'package:flutter_svg/flutter_svg.dart';
 class DashboardPage extends StatelessWidget {
   final dbUser? user; 
   final String? id;
+  final IO.Socket? socket;
 
-  DashboardPage({Key? key, this.user, this.id}) : super(key: key);
+  DashboardPage({Key? key, this.user, this.id, this.socket}) : super(key: key);
 
   Completer<GoogleMapController> googleMapController = Completer();
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('user: ' + user!.name);
+    debugPrint('user: ' + user!.name + 'in dashboard page');
 
     return SafeArea(
         child: Scaffold(
@@ -68,7 +69,7 @@ class DashboardPage extends StatelessWidget {
                             Text("Click to see detail",
                                 style: CustomTextStyles.bodyMediumOnError),
                             SizedBox(height: 12.v),
-                            _buildMap(context),
+                            _buildMap(context, socket),
                             SizedBox(height: 12.v),
                             Container(
                                 decoration: AppDecoration.outlineBluegray40014,
@@ -151,7 +152,7 @@ class DashboardPage extends StatelessWidget {
 
   /// Section Widget
   /// Put Google Map here
-  Widget _buildMap(BuildContext context) {
+  Widget _buildMap(BuildContext context, IO.Socket? socket) {
     return SizedBox(
         height: 160.v,
         width: 325.h,
@@ -159,6 +160,7 @@ class DashboardPage extends StatelessWidget {
           color: Colors.black,
           child: MapPage(
             showPlacesApiGoogleMapSearch: false,
+            socket: socket,
           ),
         ));
   }

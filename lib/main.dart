@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hafidomio_s_application2/backend/controllers/chat.dart';
+import 'package:hafidomio_s_application2/backend/services/auth_gate.dart';
 // import 'package:flutter/scheduler.dart';
 // import 'package:hafidomio_s_application2/backend/services/auth_gate.dart';
 import 'core/app_export.dart';
@@ -62,6 +63,7 @@ class _MyAppState extends State<MyApp> {
           title: 'hafidomio_s_application2',
           debugShowCheckedModeBanner: false,
           initialRoute: AppRoutes.login,
+          // home: AuthChecker(),
           routes: AppRoutes.routes,
         );
       },

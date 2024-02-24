@@ -36,14 +36,6 @@ class DashboardPage extends StatelessWidget {
             body: Container(
                 width: SizeUtils.width,
                 height: SizeUtils.height,
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        begin: Alignment(0.03, 0.25),
-                        end: Alignment(0.97, 0.83),
-                        colors: [
-                      appTheme.indigoA70001,
-                      theme.colorScheme.primary
-                    ])),
                 child: SingleChildScrollView(
                     child: Column(children: [
                   CustomImageView(
@@ -58,10 +50,10 @@ class DashboardPage extends StatelessWidget {
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("See how your last trip was",
+                            Text("Your current location",
                                 style: CustomTextStyles
                                     .titleMediumPrimaryContainer_2),
-                            Text("Click to see detail",
+                            Text("Drag to see more",
                                 style: CustomTextStyles.bodyMediumOnError),
                             SizedBox(height: 12.v),
                             _buildMap(context),
@@ -69,7 +61,7 @@ class DashboardPage extends StatelessWidget {
                             Container(
                                 decoration: AppDecoration.outlineBluegray40014,
                                 child: Column(children: [
-                                  _buildHowLong(context),
+                                  // _buildHowLong(context),
                                   SizedBox(height: 11.v),
                                   _buildDeviceConnect(context)
                                 ])),
@@ -159,24 +151,24 @@ class DashboardPage extends StatelessWidget {
         ));
   }
 
-  /// Section Widget
-  Widget _buildHowLong(BuildContext context) {
-    return StaggeredGridView.countBuilder(
-        shrinkWrap: true,
-        primary: false,
-        crossAxisCount: 4,
-        crossAxisSpacing: 14.75.h,
-        mainAxisSpacing: 14.75.h,
-        staggeredTileBuilder: (index) {
-          return StaggeredTile.fit(2);
-        },
-        itemCount: 4,
-        itemBuilder: (context, index) {
-          return HowlongItemWidget(onTapBtnArrowImage: () {
-            onTapBtnArrowImage(context);
-          });
-        });
-  }
+  // /// Section Widget
+  // Widget _buildHowLong(BuildContext context) {
+  //   return StaggeredGridView.countBuilder(
+  //       shrinkWrap: true,
+  //       primary: false,
+  //       crossAxisCount: 4,
+  //       crossAxisSpacing: 14.75.h,
+  //       mainAxisSpacing: 14.75.h,
+  //       staggeredTileBuilder: (index) {
+  //         return StaggeredTile.fit(2);
+  //       },
+  //       itemCount: 4,
+  //       itemBuilder: (context, index) {
+  //         return HowlongItemWidget(onTapBtnArrowImage: () {
+  //           onTapBtnArrowImage(context);
+  //         });
+  //       });
+  // }
 
   /// Section Widget
   Widget _buildDeviceConnect(BuildContext context) {

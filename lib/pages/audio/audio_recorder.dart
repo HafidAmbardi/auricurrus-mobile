@@ -6,6 +6,7 @@ import 'package:record/record.dart';
 import 'package:hafidomio_s_application2/pages/audio/audio_recorder_platform.dart';
 import 'package:hafidomio_s_application2/pages/map/places_google_api.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vibration/vibration.dart';
 
 class Recorder extends ConsumerStatefulWidget {
   final void Function(String path) onStop;
@@ -37,6 +38,9 @@ class _RecorderState extends ConsumerState<Recorder> with AudioRecorderMixin {
         .onAmplitudeChanged(const Duration(milliseconds: 300))
         .listen((amp) {
       setState(() => _amplitude = amp);
+      if (_amplitude!.current > -5) {
+        Vibration.vibrate(duration: 300);
+      }
     });
 
     super.initState();

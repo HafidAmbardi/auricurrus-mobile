@@ -15,6 +15,8 @@ import 'package:hafidomio_s_application2/pages/audio/audio_recorder.dart';
 import 'package:flutter/foundation.dart';
 // import consts.dart
 import 'package:hafidomio_s_application2/pages/consts/consts.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
+
 
 class PlacesApiGoogleMapSearch extends ConsumerStatefulWidget {
   final BuildContext? overlayContext;
@@ -327,10 +329,6 @@ class _PlacesApiGoogleMapSearchState
                 Recorder(
                   onStop: (path) {
                     if (kDebugMode) print('Recorded file path: $path');
-                    // setState(() {
-                    //   audioPath = path;
-                    //   showPlayer = true;
-                    // });
 
                     audioPath = path;
                     showPlayer = true;

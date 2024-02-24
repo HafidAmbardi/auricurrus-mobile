@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:hafidomio_s_application2/backend/controllers/db-service.dart';
+import 'package:hafidomio_s_application2/backend/model/user.dart';
 import 'package:hafidomio_s_application2/core/app_export.dart';
 import 'package:hafidomio_s_application2/widgets/app_bar/appbar_subtitle_two.dart';
 import 'package:hafidomio_s_application2/widgets/app_bar/custom_app_bar.dart';
@@ -20,47 +23,77 @@ class LevelHearScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
-            appBar: _buildAppBar(context),
-            body: Container(
-                width: double.maxFinite,
-                padding: EdgeInsets.symmetric(horizontal: 24.h),
-                child: Column(children: [
-                  Container(
-                      width: 295.h,
-                      margin: EdgeInsets.only(left: 12.h, right: 18.h),
-                      child: Text("How big the level of your hearing loss?",
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                          style: theme.textTheme.headlineSmall)),
-                  SizedBox(height: 3.v),
-                  Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                          width: 298.h,
-                          margin: EdgeInsets.only(left: 4.h, right: 23.h),
-                          child: Text(
-                              "So we can adjust the functionally of the App",
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.center,
-                              style: CustomTextStyles.bodyLargePrimaryContainer
-                                  .copyWith(height: 1.40)))),
-                  SizedBox(height: 14.v),
-                  _buildLevelHear(context),
-                  SizedBox(height: 92.v),
-                  CustomElevatedButton(
-                      text: "Continue",
-                      buttonStyle: CustomButtonStyles.none,
-                      decoration:
-                          CustomButtonStyles.gradientIndigoAToPrimaryDecoration,
-                      onPressed: () {
-                        onTapContinue(context);
-                      }),
-                  SizedBox(height: 5.v)
-                ]))));
+    final dbService _service = dbService();
+
+    Map<String, dynamic>? arguments =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
+        
+    return FutureBuilder<Map<String, dynamic>?>(
+      future: Future.value(
+          ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          Map<String, dynamic>? arguments = snapshot.data;
+          if (arguments == null) {
+            // Using Future.delayed to avoid the "setState() during build" issue
+            Future.delayed(Duration.zero, () {
+              Navigator.popAndPushNamed(context, AppRoutes.welcomeSignupScreen);
+            });
+            return Container(); // or some other placeholder widget
+          }
+
+          dbUser? user = arguments['user'];
+          String? id = arguments['id'];
+
+          debugPrint("user in level hear screen " + user!.name);
+
+          return SafeArea(
+              child: Scaffold(
+                  appBar: _buildAppBar(context),
+                  body: Container(
+                      width: double.maxFinite,
+                      padding: EdgeInsets.symmetric(horizontal: 24.h),
+                      child: Column(children: [
+                        Container(
+                            width: 295.h,
+                            margin: EdgeInsets.only(left: 12.h, right: 18.h),
+                            child: Text(
+                                "How big is the level of your hearing loss?",
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
+                                style: theme.textTheme.headlineSmall)),
+                        SizedBox(height: 3.v),
+                        Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                                width: 298.h,
+                                margin: EdgeInsets.only(left: 4.h, right: 23.h),
+                                child: Text(
+                                    "So we can adjust the functionally of the App",
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.center,
+                                    style: CustomTextStyles
+                                        .bodyLargePrimaryContainer
+                                        .copyWith(height: 1.40)))),
+                        SizedBox(height: 14.v),
+                        _buildLevelHear(context, user, id, _service),
+                        SizedBox(height: 92.v),
+                        CustomElevatedButton(
+                            text: "Continue",
+                            buttonStyle: CustomButtonStyles.none,
+                            decoration: CustomButtonStyles
+                                .gradientIndigoAToPrimaryDecoration,
+                            onPressed: () {
+                              onTapContinue(context, user, id);
+                            }),
+                        SizedBox(height: 5.v)
+                      ]))));
+        } else
+          return CircularProgressIndicator();
+      },
+    );
   }
 
   /// Section Widget
@@ -86,55 +119,96 @@ class LevelHearScreen extends StatelessWidget {
   }
 
   /// Section Widget
-  Widget _buildLevelHear(BuildContext context) {
+  Widget _buildLevelHear(
+      BuildContext context, dbUser? user, String? id, dbService _service) {
     return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 1.h),
-        child: Column(children: [
+      padding: EdgeInsets.symmetric(horizontal: 1.h),
+      child: Column(
+        children: [
           Padding(
-              padding: EdgeInsets.only(top: 12.v),
-              child: CustomRadioButton(
-                  text: "Mild (20-40 dB)",
-                  value: radioList[0],
-                  groupValue: levelHear,
-                  padding: EdgeInsets.fromLTRB(24.h, 25.v, 30.h, 25.v),
-                  onChange: (value) {
-                    levelHear = value;
-                  })),
+            padding: EdgeInsets.only(top: 12.v),
+            child: CustomRadioButton(
+              text: "Mild (20-40 dB)",
+              value: radioList[0],
+              groupValue: levelHear,
+              padding: EdgeInsets.fromLTRB(24.h, 25.v, 30.h, 25.v),
+              onChange: (value) {
+                levelHear = value;
+                dbUser updatedUser = user!.copyWith(
+                    // darkMode: !user.darkMode,
+                    hearingLossLevelLeft: levelHear,
+                    hearingLossLevelRight: levelHear,
+                    updatedOn: Timestamp.now());
+                _service.updateUser(id!, updatedUser);
+              },
+            ),
+          ),
           Padding(
-              padding: EdgeInsets.only(top: 12.v),
-              child: CustomRadioButton(
-                  text: "Moderate (41-60 dB)",
-                  value: radioList[1],
-                  groupValue: levelHear,
-                  padding: EdgeInsets.fromLTRB(24.h, 25.v, 30.h, 25.v),
-                  onChange: (value) {
-                    levelHear = value;
-                  })),
+            padding: EdgeInsets.only(top: 12.v),
+            child: CustomRadioButton(
+              text: "Moderate (41-60 dB)",
+              value: radioList[1],
+              groupValue: levelHear,
+              padding: EdgeInsets.fromLTRB(24.h, 25.v, 30.h, 25.v),
+              onChange: (value) {
+                levelHear = value;
+                dbUser updatedUser = user!.copyWith(
+                    // darkMode: !user.darkMode,
+                    hearingLossLevelLeft: levelHear,
+                    hearingLossLevelRight: levelHear,
+                    updatedOn: Timestamp.now());
+                _service.updateUser(id!, updatedUser);
+              },
+            ),
+          ),
           Padding(
-              padding: EdgeInsets.only(top: 12.v),
-              child: CustomRadioButton(
-                  text: "Severe (61-80 dB)",
-                  value: radioList[2],
-                  groupValue: levelHear,
-                  padding: EdgeInsets.fromLTRB(24.h, 25.v, 30.h, 25.v),
-                  onChange: (value) {
-                    levelHear = value;
-                  })),
+            padding: EdgeInsets.only(top: 12.v),
+            child: CustomRadioButton(
+              text: "Severe (61-80 dB)",
+              value: radioList[2],
+              groupValue: levelHear,
+              padding: EdgeInsets.fromLTRB(24.h, 25.v, 30.h, 25.v),
+              onChange: (value) {
+                levelHear = value;
+                dbUser updatedUser = user!.copyWith(
+                    // darkMode: !user.darkMode,
+                    hearingLossLevelLeft: levelHear,
+                    hearingLossLevelRight: levelHear,
+                    updatedOn: Timestamp.now());
+                _service.updateUser(id!, updatedUser);
+              },
+            ),
+          ),
           Padding(
-              padding: EdgeInsets.only(top: 12.v),
-              child: CustomRadioButton(
-                  text: "Profound (>81 dB)",
-                  value: radioList[3],
-                  groupValue: levelHear,
-                  padding: EdgeInsets.fromLTRB(24.h, 25.v, 30.h, 25.v),
-                  onChange: (value) {
-                    levelHear = value;
-                  }))
-        ]));
+            padding: EdgeInsets.only(top: 12.v),
+            child: CustomRadioButton(
+              text: "Profound (>81 dB)",
+              value: radioList[3],
+              groupValue: levelHear,
+              padding: EdgeInsets.fromLTRB(24.h, 25.v, 30.h, 25.v),
+              onChange: (value) {
+                levelHear = value;
+                dbUser updatedUser = user!.copyWith(
+                    // darkMode: !user.darkMode,
+                    hearingLossLevelLeft: levelHear,
+                    hearingLossLevelRight: levelHear,
+                    updatedOn: Timestamp.now());
+                _service.updateUser(id!, updatedUser);
+              },
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   /// Navigates to the bluetoothScreen when the action is triggered.
-  onTapContinue(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.bluetoothScreen);
+  // onTapContinue(BuildContext context, dbUser? user, String? id) {
+  //   Navigator.pushNamed(context, AppRoutes.bluetoothScreen,
+  //       arguments: {'user': user, 'id': id});
+  // }
+  onTapContinue(BuildContext context, dbUser? user, String? id) {
+    Navigator.pushNamed(context, AppRoutes.dashboardContainerScreen,
+        arguments: {'user': user, 'id': id});
   }
 }

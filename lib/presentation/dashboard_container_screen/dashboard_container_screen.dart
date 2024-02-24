@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hafidomio_s_application2/backend/model/user.dart';
 import 'package:hafidomio_s_application2/core/app_export.dart';
 import 'package:hafidomio_s_application2/presentation/dashboard_page/dashboard_page.dart';
 import 'package:hafidomio_s_application2/presentation/lempuyangan_screen/lempuyangan_screen.dart';
@@ -20,22 +21,37 @@ class DashboardContainerScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Map<String, dynamic>? arguments =
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
+
+    // return FutureBuilder<Map<String, dynamic>?>()
+    dbUser? user = arguments?['user'];
+    String? id = arguments?['id'];
+
+    debugPrint("user in Dashboard screen " +
+        user!.name +
+        " " +
+        user.hearingLossLevelLeft);
+
     return SafeArea(
       child: Scaffold(
           extendBody: true,
           extendBodyBehindAppBar: true,
           body: Container(
-              //transparent color
-              color: Colors.transparent,
-              width: SizeUtils.width,
-              height: SizeUtils.height,
-              child: Navigator(
-                  key: navigatorKey,
-                  initialRoute: AppRoutes.dashboardPage,
-                  onGenerateRoute: (routeSetting) => PageRouteBuilder(
-                      pageBuilder: (ctx, ani, ani1) =>
-                          getCurrentPage(routeSetting.name!, overlayContext),
-                      transitionDuration: Duration(seconds: 0)))),
+            //transparent color
+            color: Colors.transparent,
+            width: SizeUtils.width,
+            height: SizeUtils.height,
+            child: Navigator(
+              key: navigatorKey,
+              initialRoute: AppRoutes.dashboardPage,
+              onGenerateRoute: (routeSetting) => PageRouteBuilder(
+                pageBuilder: (ctx, ani, ani1) => getCurrentPage(
+                    routeSetting.name!, overlayContext, user, id),
+                transitionDuration: Duration(seconds: 0),
+              ),
+            ),
+          ),
           bottomNavigationBar: _buildNavbarsFiverdActive(context),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked),
@@ -93,14 +109,24 @@ class DashboardContainerScreen extends StatelessWidget {
   }
 
   ///Handling page based on route
-  Widget getCurrentPage(String currentRoute, BuildContext? context) {
+  Widget getCurrentPage(
+      String currentRoute, BuildContext? context, dbUser? user, String? id) {
     switch (currentRoute) {
       case AppRoutes.dashboardPage:
-        return DashboardPage();
+        return DashboardPage(
+          user: user,
+        );
       case AppRoutes.locationScreen:
         return LocationScreen(overlayContext: overlayContext);
       case AppRoutes.profileScreen:
-        return ProfileScreen();
+        return ProfileScreen(
+          user: user,
+          id: id,
+          onSignOut: () {
+            Navigator.pushNamedAndRemoveUntil(
+                context!, AppRoutes.login, (route) => false);
+          },
+        );
       default:
         return DefaultWidget();
     }

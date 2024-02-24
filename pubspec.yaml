@@ -25,6 +25,13 @@ dependencies:
   url_launcher: ^6.2.4
   record: ^5.0.4
   vibration: ^1.8.4
+  cloud_firestore: ^4.15.5
+  socket_io_client: ^2.0.3+1
+  hooks_riverpod: ^2.4.10
+  google_sign_in: ^6.2.1
+  firebase_auth: ^4.17.4
+  equatable: ^2.0.5
+  sign_in_button: ^3.2.0
 dev_dependencies: 
   flutter_test: 
     sdk: flutter

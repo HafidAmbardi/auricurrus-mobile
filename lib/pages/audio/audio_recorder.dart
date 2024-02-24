@@ -7,6 +7,7 @@ import 'package:hafidomio_s_application2/pages/audio/audio_recorder_platform.dar
 import 'package:hafidomio_s_application2/pages/map/places_google_api.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vibration/vibration.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class Recorder extends ConsumerStatefulWidget {
   final void Function(String path) onStop;
@@ -25,9 +26,19 @@ class _RecorderState extends ConsumerState<Recorder> with AudioRecorderMixin {
   RecordState _recordState = RecordState.stop;
   StreamSubscription<Amplitude>? _amplitudeSub;
   Amplitude? _amplitude;
+  final int PORT = 3001;
+  final String IP = '10.0.2.2';
+   late final IO.Socket socket; 
+
 
   @override
   void initState() {
+    socket = IO.io('http://$IP:$PORT', <String, dynamic>{
+      'transports': ['websocket'],
+      'autoConnect': true,
+    });
+
+    connectServer();
     _audioRecorder = AudioRecorder();
 
     _recordSub = _audioRecorder.onStateChanged().listen((recordState) {
@@ -44,6 +55,20 @@ class _RecorderState extends ConsumerState<Recorder> with AudioRecorderMixin {
     });
 
     super.initState();
+  }
+
+   void connectServer() {
+    socket.connect();
+    socket.onConnect((_) {
+      debugPrint('connected to server blabla');
+    });
+    socket.on('connect_error', (data) {
+      debugPrint('Error connecting to server: $data');
+    });
+  }
+
+  void sendMessage([String? s]) {
+    socket.emit('chat_message', s);
   }
 
   Future<void> _start() async {
@@ -130,6 +155,16 @@ class _RecorderState extends ConsumerState<Recorder> with AudioRecorderMixin {
   @override
   Widget build(BuildContext context) {
     final isStarted = ref.watch(isStartedStateProvider);
+    debugPrint('Current Amplitude: ${_amplitude?.current}');
+
+    double threshold = -80.0;
+
+    if (_amplitude != null && _amplitude!.current > threshold) {
+        sendMessage('honk');
+        debugPrint('message sent honk to PORT: $PORT ');
+  }
+
+
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
       _buildRecordStopControl(isStarted),
       _buildText(),

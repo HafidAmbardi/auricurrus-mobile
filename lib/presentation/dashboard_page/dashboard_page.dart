@@ -1,3 +1,5 @@
+import 'package:hafidomio_s_application2/backend/model/user.dart';
+
 import '../dashboard_page/widgets/howlong_item_widget.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
@@ -18,7 +20,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 // ignore_for_file: must_be_immutable
 class DashboardPage extends StatelessWidget {
-  DashboardPage({Key? key}) : super(key: key);
+  final dbUser? user; 
+  DashboardPage({Key? key, this.user}) : super(key: key);
 
   Completer<GoogleMapController> googleMapController = Completer();
 
@@ -29,7 +32,7 @@ class DashboardPage extends StatelessWidget {
             extendBody: true,
             extendBodyBehindAppBar: true,
             backgroundColor: Colors.transparent,
-            appBar: _buildAppBar(context),
+            appBar: _buildAppBar(context, user),
             body: Container(
                 width: SizeUtils.width,
                 height: SizeUtils.height,
@@ -76,7 +79,7 @@ class DashboardPage extends StatelessWidget {
   }
 
   /// Section Widget
-  PreferredSizeWidget _buildAppBar(BuildContext context) {
+  PreferredSizeWidget _buildAppBar(BuildContext context, dbUser? user) {
     return CustomAppBar(
         height: 127.v,
         title: Container(
@@ -93,7 +96,7 @@ class DashboardPage extends StatelessWidget {
                   margin: EdgeInsets.only(top: 5.v),
                   child: Stack(alignment: Alignment.center, children: [
                     AppbarTitle(
-                        text: "Josephine",
+                        text: user!.name,
                         margin: EdgeInsets.only(
                             top: 19.v, right: 192.h, bottom: 22.v)),
                     AppbarSubtitleFour(

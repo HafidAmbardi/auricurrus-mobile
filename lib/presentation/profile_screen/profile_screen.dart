@@ -1,4 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hafidomio_s_application2/backend/login_controller/login_controller.dart';
+import 'package:hafidomio_s_application2/backend/model/user.dart';
+import 'package:hafidomio_s_application2/backend/providers/auth_provider.dart';
 import 'package:hafidomio_s_application2/core/app_export.dart';
 import 'package:hafidomio_s_application2/presentation/dashboard_page/dashboard_page.dart';
 import 'package:hafidomio_s_application2/widgets/custom_bottom_app_bar.dart';
@@ -9,17 +13,38 @@ import 'package:hafidomio_s_application2/widgets/app_bar/appbar_subtitle_one.dar
 import 'package:hafidomio_s_application2/widgets/app_bar/appbar_title.dart';
 import 'package:hafidomio_s_application2/widgets/app_bar/appbar_title_button.dart';
 import 'package:hafidomio_s_application2/widgets/app_bar/custom_app_bar.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class ProfileScreen extends StatelessWidget {
-  ProfileScreen({Key? key})
+class ProfileScreen extends HookConsumerWidget {
+  final dbUser? user; 
+  final String? id; 
+  final VoidCallback? onSignOut;
+
+  ProfileScreen({Key? key, this.user, this.id, this.onSignOut})
       : super(
           key: key,
         );
 
+
   GlobalKey<NavigatorState> navigatorKey = GlobalKey();
+  
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+
+    //  Map<String, dynamic>? arguments =
+    //     ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
+
+    // user = arguments?['user'];
+    // id = arguments?['id'];
+
+    final authState = ref.watch(authStateProvider);
+    final User? authenticatedUser = authState.value;
+
+    String? userEmail = authenticatedUser?.email;
+    String? userUID = authenticatedUser?.uid;
+
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: appTheme.indigoA70001,
@@ -42,7 +67,7 @@ class ProfileScreen extends StatelessWidget {
                         margin: EdgeInsets.only(top: 5.v),
                         child: Stack(alignment: Alignment.center, children: [
                           AppbarTitle(
-                              text: "Josephine",
+                              text: user!.name,
                               margin: EdgeInsets.only(
                                   top: 19.v, right: 192.h, bottom: 22.v)),
                           AppbarSubtitleFour(
@@ -373,6 +398,42 @@ class ProfileScreen extends StatelessWidget {
                               child: SvgPicture.asset(
                                 ImageConstant.imgArrowRight,
                               ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 12.v),
+
+                    // Sign Out button
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 25.h,
+                        vertical: 14.v,
+                      ),
+                      decoration: AppDecoration.outlineGray.copyWith(
+                        borderRadius: BorderRadiusStyle.roundedBorder8,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Spacer(),
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 3.v),
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                              ),
+                              child: Text(
+                                "Sign Out",
+                                style: TextStyle(fontSize: 16.0),
+                                // onLongPress: ref.read(loginControllerProvider.notifier).signOut(),
+                              ),
+                              onPressed: () {
+                                ref.read(loginControllerProvider.notifier).signOut();
+                                onSignOut?.call();
+                                debugPrint('called onsignout callback');
+                              },
                             ),
                           ),
                         ],

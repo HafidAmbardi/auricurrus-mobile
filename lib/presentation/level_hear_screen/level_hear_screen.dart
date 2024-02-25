@@ -27,7 +27,7 @@ class LevelHearScreen extends StatelessWidget {
 
     Map<String, dynamic>? arguments =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
-        
+
     return FutureBuilder<Map<String, dynamic>?>(
       future: Future.value(
           ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?),
@@ -45,7 +45,7 @@ class LevelHearScreen extends StatelessWidget {
           dbUser? user = arguments['user'];
           String? id = arguments['id'];
 
-          debugPrint("user in level hear screen " + user!.name);
+          debugPrint("user in level hear screen " + (user?.name ?? 'null'));
 
           return SafeArea(
               child: Scaffold(
@@ -134,12 +134,16 @@ class LevelHearScreen extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(24.h, 25.v, 30.h, 25.v),
               onChange: (value) {
                 levelHear = value;
-                dbUser updatedUser = user!.copyWith(
-                    // darkMode: !user.darkMode,
-                    hearingLossLevelLeft: levelHear,
-                    hearingLossLevelRight: levelHear,
-                    updatedOn: Timestamp.now());
-                _service.updateUser(id!, updatedUser);
+                if (user != null) {
+                  dbUser updatedUser = user.copyWith(
+                      // darkMode: !user.darkMode,
+                      hearingLossLevelLeft: levelHear,
+                      hearingLossLevelRight: levelHear,
+                      updatedOn: Timestamp.now());
+                  _service.updateUser(id!, updatedUser);
+                } else {
+                  debugPrint('Error: user is null');
+                }
               },
             ),
           ),
@@ -152,12 +156,16 @@ class LevelHearScreen extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(24.h, 25.v, 30.h, 25.v),
               onChange: (value) {
                 levelHear = value;
-                dbUser updatedUser = user!.copyWith(
-                    // darkMode: !user.darkMode,
-                    hearingLossLevelLeft: levelHear,
-                    hearingLossLevelRight: levelHear,
-                    updatedOn: Timestamp.now());
-                _service.updateUser(id!, updatedUser);
+                if (user != null) {
+                  dbUser updatedUser = user.copyWith(
+                      // darkMode: !user.darkMode,
+                      hearingLossLevelLeft: levelHear,
+                      hearingLossLevelRight: levelHear,
+                      updatedOn: Timestamp.now());
+                  _service.updateUser(id!, updatedUser);
+                } else {
+                  debugPrint('Error: user is null');
+                }
               },
             ),
           ),
@@ -170,12 +178,16 @@ class LevelHearScreen extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(24.h, 25.v, 30.h, 25.v),
               onChange: (value) {
                 levelHear = value;
-                dbUser updatedUser = user!.copyWith(
-                    // darkMode: !user.darkMode,
-                    hearingLossLevelLeft: levelHear,
-                    hearingLossLevelRight: levelHear,
-                    updatedOn: Timestamp.now());
-                _service.updateUser(id!, updatedUser);
+                if (user != null) {
+                  dbUser updatedUser = user.copyWith(
+                      // darkMode: !user.darkMode,
+                      hearingLossLevelLeft: levelHear,
+                      hearingLossLevelRight: levelHear,
+                      updatedOn: Timestamp.now());
+                  _service.updateUser(id!, updatedUser);
+                } else {
+                  debugPrint('Error: user is null');
+                }
               },
             ),
           ),
@@ -188,12 +200,16 @@ class LevelHearScreen extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(24.h, 25.v, 30.h, 25.v),
               onChange: (value) {
                 levelHear = value;
-                dbUser updatedUser = user!.copyWith(
-                    // darkMode: !user.darkMode,
-                    hearingLossLevelLeft: levelHear,
-                    hearingLossLevelRight: levelHear,
-                    updatedOn: Timestamp.now());
-                _service.updateUser(id!, updatedUser);
+                if (user != null) {
+                  dbUser updatedUser = user.copyWith(
+                      // darkMode: !user.darkMode,
+                      hearingLossLevelLeft: levelHear,
+                      hearingLossLevelRight: levelHear,
+                      updatedOn: Timestamp.now());
+                  _service.updateUser(id!, updatedUser);
+                } else {
+                  debugPrint('Error: user is null');
+                }
               },
             ),
           ),

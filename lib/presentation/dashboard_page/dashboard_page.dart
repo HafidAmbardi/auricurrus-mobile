@@ -20,7 +20,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 // ignore_for_file: must_be_immutable
 class DashboardPage extends StatelessWidget {
-  final dbUser? user; 
+  final dbUser? user;
   DashboardPage({Key? key, this.user}) : super(key: key);
 
   Completer<GoogleMapController> googleMapController = Completer();
@@ -88,7 +88,7 @@ class DashboardPage extends StatelessWidget {
                   margin: EdgeInsets.only(top: 5.v),
                   child: Stack(alignment: Alignment.center, children: [
                     AppbarTitle(
-                        text: user!.name,
+                        text: user?.name ?? 'Default Name',
                         margin: EdgeInsets.only(
                             top: 19.v, right: 192.h, bottom: 22.v)),
                     AppbarSubtitleFour(

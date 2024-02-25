@@ -16,8 +16,8 @@ import 'package:hafidomio_s_application2/widgets/app_bar/custom_app_bar.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class ProfileScreen extends HookConsumerWidget {
-  final dbUser? user; 
-  final String? id; 
+  final dbUser? user;
+  final String? id;
   final VoidCallback? onSignOut;
 
   ProfileScreen({Key? key, this.user, this.id, this.onSignOut})
@@ -25,13 +25,10 @@ class ProfileScreen extends HookConsumerWidget {
           key: key,
         );
 
-
   GlobalKey<NavigatorState> navigatorKey = GlobalKey();
-  
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     //  Map<String, dynamic>? arguments =
     //     ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
 
@@ -43,7 +40,6 @@ class ProfileScreen extends HookConsumerWidget {
 
     String? userEmail = authenticatedUser?.email;
     String? userUID = authenticatedUser?.uid;
-
 
     return SafeArea(
       child: Scaffold(
@@ -67,7 +63,7 @@ class ProfileScreen extends HookConsumerWidget {
                         margin: EdgeInsets.only(top: 5.v),
                         child: Stack(alignment: Alignment.center, children: [
                           AppbarTitle(
-                              text: user!.name,
+                              text: user?.name ?? 'Default Name',
                               margin: EdgeInsets.only(
                                   top: 19.v, right: 192.h, bottom: 22.v)),
                           AppbarSubtitleFour(
@@ -430,7 +426,9 @@ class ProfileScreen extends HookConsumerWidget {
                                 // onLongPress: ref.read(loginControllerProvider.notifier).signOut(),
                               ),
                               onPressed: () {
-                                ref.read(loginControllerProvider.notifier).signOut();
+                                ref
+                                    .read(loginControllerProvider.notifier)
+                                    .signOut();
                                 onSignOut?.call();
                                 debugPrint('called onsignout callback');
                               },

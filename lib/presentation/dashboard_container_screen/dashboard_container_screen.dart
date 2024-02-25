@@ -11,6 +11,8 @@ import 'package:hafidomio_s_application2/widgets/custom_bottom_app_bar.dart';
 import 'package:hafidomio_s_application2/widgets/custom_floating_button.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hafidomio_s_application2/widgets/custom_search_view.dart';
+// import permissions
+import 'package:permission_handler/permission_handler.dart';
 
 // ignore_for_file: must_be_immutable
 class DashboardContainerScreen extends StatelessWidget {
@@ -29,9 +31,9 @@ class DashboardContainerScreen extends StatelessWidget {
     String? id = arguments?['id'];
 
     debugPrint("user in Dashboard screen " +
-        user!.name +
+        (user?.name ?? 'null') +
         " " +
-        user.hearingLossLevelLeft);
+        (user?.hearingLossLevelLeft?.toString() ?? 'null'));
 
     return SafeArea(
       child: Scaffold(

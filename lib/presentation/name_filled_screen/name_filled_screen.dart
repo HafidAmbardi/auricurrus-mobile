@@ -25,8 +25,7 @@ class NameFilledScreen extends StatelessWidget {
     dbUser? user = arguments['user'];
     String? id = arguments['id'];
 
-    debugPrint("user in name filled screen " + user!.name);
-
+    debugPrint("user in name filled screen " + (user?.name ?? 'null'));
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -70,9 +69,13 @@ class NameFilledScreen extends StatelessWidget {
                         decoration:
                             const InputDecoration(labelText: "Your Name Here"),
                         onChanged: (value) {
-                          dbUser updatedUser = user.copyWith(
-                              name: value, updatedOn: Timestamp.now());
-                          _service.updateUser(id!, updatedUser);
+                          if (user != null && id != null) {
+                            dbUser updatedUser = user.copyWith(
+                                name: value, updatedOn: Timestamp.now());
+                            _service.updateUser(id, updatedUser);
+                          } else {
+                            debugPrint('Error: user or id is null');
+                          }
                         },
                       ),
                     ),

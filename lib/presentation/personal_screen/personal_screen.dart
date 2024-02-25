@@ -11,14 +11,14 @@ class PersonalScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Map<String, dynamic> arguments =
-        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+        ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>? ??
+            {};
 
     // Access the dbUser and id
     dbUser? user = arguments['user'];
     String? id = arguments['id'];
 
-    debugPrint("user in personal screen " + user!.name);
-
+    debugPrint("user in personal screen " + (user?.name ?? 'null'));
     return GestureDetector(
       onTap: () => onTapContinue(context, user, id),
       child: SafeArea(

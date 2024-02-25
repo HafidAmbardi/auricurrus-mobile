@@ -8,6 +8,7 @@ import 'package:hafidomio_s_application2/backend/login_controller/login_controll
 import 'package:hafidomio_s_application2/core/app_export.dart';
 import 'package:hafidomio_s_application2/widgets/app_bar/appbar_trailing_image.dart';
 import 'package:hafidomio_s_application2/widgets/app_bar/custom_app_bar.dart';
+import 'package:hafidomio_s_application2/backend/model/user.dart';
 
 class GateScreen extends StatefulHookConsumerWidget {
   const GateScreen({super.key});
@@ -17,7 +18,6 @@ class GateScreen extends StatefulHookConsumerWidget {
 }
 
 class _GateScreenState extends ConsumerState<GateScreen> {
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -35,31 +35,31 @@ class _GateScreenState extends ConsumerState<GateScreen> {
                   Text("Hear Everywhere", style: theme.textTheme.headlineSmall),
                   Spacer(),
                   CustomElevatedButton(
-                      text: "Get in as Josephine",
-                      rightIcon: Container(
-                          margin: EdgeInsets.only(left: 30.h),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8.h)),
-                          child: SvgPicture.asset(ImageConstant.imgArrowleft,
-                              height: 24.adaptSize, width: 24.adaptSize)),
-                      buttonStyle: CustomButtonStyles.none,
-                      decoration: CustomButtonStyles
-                          .gradientIndigoAToPrimaryDecoration),
+                    text: "Skip Sign-In",
+                    rightIcon: Container(
+                        margin: EdgeInsets.only(left: 30.h),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8.h)),
+                        child: SvgPicture.asset(ImageConstant.imgArrowleft,
+                            height: 24.adaptSize, width: 24.adaptSize)),
+                    buttonStyle: CustomButtonStyles.none,
+                    decoration:
+                        CustomButtonStyles.gradientIndigoAToPrimaryDecoration,
+                    onPressed: () => onTapContinue(context, null, null),
+                  ),
                   SizedBox(height: 12.v),
                   CustomElevatedButton(
-                      text: "Sign-Up with Google",
-                      leftIcon: Container(
-                          margin: EdgeInsets.only(right: 10.h),
-                          child: SvgPicture.asset(ImageConstant.imgGoogle,
-                              height: 25.adaptSize, width: 25.adaptSize)),
-                      buttonStyle: CustomButtonStyles.none,
-                      decoration:
-                          CustomButtonStyles.gradientGrayToGrayDecoration,
-                      onPressed: ref.read(loginControllerProvider.notifier).login,
-                      )
+                    text: "Sign-Up with Google",
+                    leftIcon: Container(
+                        margin: EdgeInsets.only(right: 10.h),
+                        child: SvgPicture.asset(ImageConstant.imgGoogle,
+                            height: 25.adaptSize, width: 25.adaptSize)),
+                    buttonStyle: CustomButtonStyles.none,
+                    decoration: CustomButtonStyles.gradientGrayToGrayDecoration,
+                    onPressed: ref.read(loginControllerProvider.notifier).login,
+                  )
                 ]))));
   }
-
 
   /// Section Widget
   PreferredSizeWidget _buildAppBar(BuildContext context) {
@@ -94,7 +94,6 @@ class _GateScreenState extends ConsumerState<GateScreen> {
             ));
   }
 
-  
   Widget googleSignInButton() {
     return Center(
       child: SizedBox(
@@ -105,6 +104,14 @@ class _GateScreenState extends ConsumerState<GateScreen> {
           onPressed: ref.read(loginControllerProvider.notifier).login,
         ),
       ),
+    );
+  }
+
+  onTapContinue(BuildContext context, dbUser? user, String? id) {
+    Navigator.pushNamed(
+      context,
+      AppRoutes.personalScreen,
+      arguments: {'user': user, 'id': id},
     );
   }
 }

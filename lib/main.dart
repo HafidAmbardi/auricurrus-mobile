@@ -6,10 +6,15 @@ import 'package:hafidomio_s_application2/backend/services/auth_gate.dart';
 import 'firebase_options.dart';
 import 'core/app_export.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 var globalMessengerKey = GlobalKey<ScaffoldMessengerState>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  var status = await Permission.microphone.status;
+  if (!status.isGranted) {
+    await Permission.microphone.request();
+  }
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

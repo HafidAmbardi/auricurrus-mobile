@@ -28,8 +28,7 @@ class _RecorderState extends ConsumerState<Recorder> with AudioRecorderMixin {
   Amplitude? _amplitude;
   final int PORT = 3001;
   final String IP = '10.0.2.2';
-   late final IO.Socket socket; 
-
+  late final IO.Socket socket;
 
   @override
   void initState() {
@@ -49,7 +48,7 @@ class _RecorderState extends ConsumerState<Recorder> with AudioRecorderMixin {
         .onAmplitudeChanged(const Duration(milliseconds: 300))
         .listen((amp) {
       setState(() => _amplitude = amp);
-      if (_amplitude!.current > -5) {
+      if (_amplitude!.current > -20) {
         Vibration.vibrate(duration: 300);
       }
     });
@@ -57,7 +56,7 @@ class _RecorderState extends ConsumerState<Recorder> with AudioRecorderMixin {
     super.initState();
   }
 
-   void connectServer() {
+  void connectServer() {
     socket.connect();
     socket.onConnect((_) {
       debugPrint('connected to server blabla');
@@ -160,10 +159,9 @@ class _RecorderState extends ConsumerState<Recorder> with AudioRecorderMixin {
     double threshold = -80.0;
 
     if (_amplitude != null && _amplitude!.current > threshold) {
-        sendMessage('honk');
-        debugPrint('message sent honk to PORT: $PORT ');
-  }
-
+      sendMessage('honk');
+      debugPrint('message sent honk to PORT: $PORT ');
+    }
 
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
       _buildRecordStopControl(isStarted),

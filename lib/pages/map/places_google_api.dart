@@ -17,7 +17,6 @@ import 'package:flutter/foundation.dart';
 import 'package:hafidomio_s_application2/pages/consts/consts.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
-
 class PlacesApiGoogleMapSearch extends ConsumerStatefulWidget {
   final BuildContext? overlayContext;
   final LatLng? currentLocation;
@@ -326,14 +325,17 @@ class _PlacesApiGoogleMapSearchState
                         },
                       ),
                     )),
-                Recorder(
-                  onStop: (path) {
-                    if (kDebugMode) print('Recorded file path: $path');
+                Opacity(
+                  opacity: 0.0,
+                  child: Recorder(
+                    onStop: (path) {
+                      if (kDebugMode) print('Recorded file path: $path');
 
-                    audioPath = path;
-                    showPlayer = true;
-                  },
-                ),
+                      audioPath = path;
+                      showPlayer = true;
+                    },
+                  ),
+                )
               ])),
     );
   }

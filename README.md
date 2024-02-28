@@ -47,10 +47,10 @@ We utilized many packages to develop our app, however for our main feature, deci
 After comparing the documentation of many dart packages, rigorous trial and error, and consulting experienced developers, we were able to find a package that supports our feature and implemented it into one of our core features.
 
 ### 3. IoT Communication Means
-Ideally, we would implement Bluetooth technology, as it is efficient, fast, and secure. The lack of resources led us to utilize other simpler solutions, in which we used websocket servers.
+Due to time constraints we were required to learn a way for our mobile app to communicate with our watch app despite our lack of experience regarding the issue.
 
 ### How we tackled that challenge
-Websocket servers are easy to set up, although many downsides come with it. The first downside would be scalability. Websockets rely on servers and as the amount of users increases, so would the requirements of servers. Another would be IP address configuration. Websockets rely on them, and different sources of connections would impact the IP address for the devices. Difference in IP addresses would result in failure of communication establishment.
+Fortunately, websocket servers are easy to set up and allowed us to communicate between the two interaces. Eventually as users increase we plan to have bluetooth integration as in the current state, different sources of connections would impact the IP address for the devices. Difference in IP addresses would result in failure of communication establishment.
 
 ## Further Development
 1. Implement sound recognition to classify honks, sirens, and other road sounds.
